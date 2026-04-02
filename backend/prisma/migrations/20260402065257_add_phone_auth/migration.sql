@@ -1,54 +1,22 @@
--- CreateTable
-CREATE TABLE "Department" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "User" (
+-- RedefineTables
+PRAGMA defer_foreign_keys=ON;
+PRAGMA foreign_keys=OFF;
+CREATE TABLE "new_User" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
+    "email" TEXT,
+    "phoneNumber" TEXT,
     "password" TEXT NOT NULL,
     "role" TEXT NOT NULL DEFAULT 'employee',
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
+    "deviceId" TEXT,
     "departmentId" INTEGER,
     CONSTRAINT "User_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
-
--- CreateTable
-CREATE TABLE "Attendance" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "userId" INTEGER NOT NULL,
-    "checkIn" TEXT NOT NULL,
-    "checkOut" TEXT,
-    "location" TEXT NOT NULL,
-    "date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "status" TEXT NOT NULL DEFAULT 'PRESENT',
-    "reason" TEXT,
-    CONSTRAINT "Attendance_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "Holiday" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "date" DATETIME NOT NULL,
-    "name" TEXT NOT NULL,
-    "type" TEXT NOT NULL DEFAULT 'HOLIDAY'
-);
-
--- CreateTable
-CREATE TABLE "Notice" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "message" TEXT NOT NULL,
-    "date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
--- CreateIndex
-CREATE UNIQUE INDEX "Department_name_key" ON "Department"("name");
-
--- CreateIndex
+INSERT INTO "new_User" ("departmentId", "email", "id", "isArchived", "name", "password", "role") SELECT "departmentId", "email", "id", "isArchived", "name", "password", "role" FROM "User";
+DROP TABLE "User";
+ALTER TABLE "new_User" RENAME TO "User";
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Holiday_date_key" ON "Holiday"("date");
+CREATE UNIQUE INDEX "User_phoneNumber_key" ON "User"("phoneNumber");
+PRAGMA foreign_keys=ON;
+PRAGMA defer_foreign_keys=OFF;
