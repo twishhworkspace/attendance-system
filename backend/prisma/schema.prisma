@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id                 Int      @id @default(autoincrement())
+  name               String
+  logo               String?
+  email              String   @unique
+  subscriptionStatus String   @default("TRIAL") // "TRIAL", "ACTIVE", "EXPIRED"
+  plan               String   @default("NONE")  // "6M", "1Y", "2Y", "3Y", "5Y", "NONE"
+  employeeLimit      Int      @default(50)      // -1 for unlimited
+  expiryDate         DateTime
+  startDate          DateTime @default(now())
+  adminNote          String?
+  createdAt          DateTime @default(now())
+  
+  users           User[]
+  departments     Department[]
+  locations       OfficeLocation[]
+  holidays        Holiday[]
+  notices         Notice[]
+  auditLogs       AuditLog[]
+}
+
+model Department {
+  id        Int    @id @default(autoincrement())
+  name      String
+  weeklyOff Int    @default(0)
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id])
+  users     User[]
+
+  @@unique([name, companyId])
+}
+
+model User {
+  id           Int         @id @default(autoincrement())
+  name         String
+  email        String?     @unique
+  phoneNumber  String?     @unique
+  password     String
+  role         String      @default("employee") // "employee", "admin", "superadmin"
+  isArchived   Boolean     @default(false)
+  deviceId     String?
+  companyId    Int
+  company      Company     @relation(fields: [companyId], references: [id])
+  departmentId Int?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  attendances  Attendance[]
+  auditLogs    AuditLog[]
+}
+
+model Attendance {
+  id       Int      @id @default(autoincrement())
+  userId   Int
+  user     User     @relation(fields: [userId], references: [id])
+  checkIn  String
+  checkOut String?
+  location String
+  date     DateTime @default(now())
+  status   String   @default("PRESENT") // "PRESENT", "PENDING", "APPROVED"
+  reason   String?
+}
+
+model Holiday {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  name      String
+  type      String   @default("HOLIDAY")
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id])
+
+  @@unique([date, companyId])
+}
+
+model Notice {
+  id        Int      @id @default(autoincrement())
+  message   String
+  date      DateTime @default(now())
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id])
+}
+
+model OfficeLocation {
+  id        Int      @id @default(autoincrement())
+  name      String
+  latitude  Float
+  longitude Float
+  radius    Float    @default(100.0)
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id])
+}
+
+model AuditLog {
+  id               Int      @id @default(autoincrement())
+  action           String
+  superAdminId     Int?
+  superAdmin       User?    @relation(fields: [superAdminId], references: [id])
+  targetCompanyId  Int?
+  targetCompany    Company? @relation(fields: [targetCompanyId], references: [id])
+  details          String?
+  timestamp        DateTime @default(now())
+}
+
