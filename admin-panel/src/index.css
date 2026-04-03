@@ -1,0 +1,292 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg-color: #000000;
+  --hub-bg: #0a0a0a;
+  --card-bg: #111116;
+  --glow-accent: rgba(139, 92, 246, 0.15); /* Violet Glow */
+  --border-subtle: #1f2937;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --primary-color: #8B5CF6; /* Electric Violet */
+  --primary-hover: #7C3AED;
+  --danger-color: #ef4444;
+  --success-color: #10b981;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Central Hub container */
+.app-container {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 85vh;
+  margin: 2rem;
+  background: var(--hub-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  box-shadow: 0 0 50px -10px var(--glow-accent);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Top Navbar */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(17, 24, 39, 0.5);
+}
+
+.brand {
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  color: var(--text-primary);
+}
+
+.brand-accent {
+  background: linear-gradient(90deg, #8B5CF6, #C084FC);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.nav-item {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  padding: 0.5rem 1.2rem;
+  border-radius: 9999px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+  background: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.nav-item.active {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 15px -5px rgba(59, 130, 246, 0.2);
+}
+
+/* Content Area */
+.main-content {
+  padding: 2.5rem;
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  overflow-y: auto;
+}
+
+/* Inner Cards */
+.glass-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-panel:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 6px 20px -5px rgba(0, 0, 0, 0.4);
+}
+
+h3 {
+  margin-top: 0;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Highly Stylized Tables */
+table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 0.5rem; }
+th { color: var(--text-secondary); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; padding: 0 1rem 0.5rem 1rem; text-align: left; }
+td { background: rgba(255,255,255,0.02); padding: 1.2rem 1rem; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); font-size: 0.95rem; }
+td:first-child { border-left: 1px solid var(--border-subtle); border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+td:last-child { border-right: 1px solid var(--border-subtle); border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+tr { transition: all 0.2s; }
+tr:hover td { background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.3); }
+
+/* Forms & Buttons */
+input, select {
+  width: 100%; padding: 0.9rem; margin-bottom: 1rem;
+  background: var(--hub-bg); border: 1px solid var(--border-subtle);
+  color: white; border-radius: 8px; font-family: 'Inter', sans-serif;
+}
+input:focus, select:focus { outline: none; border-color: var(--primary-color); }
+
+.btn-primary {
+  background: var(--border-subtle); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 500;
+  width: 100%; transition: all 0.2s;
+}
+.btn-primary:hover { background: var(--primary-color); border-color: var(--primary-color); }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.05);
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
+  display: flex; justify-content: center; align-items: center; z-index: 1000;
+}
+.modal-content {
+  background: var(--hub-bg); padding: 2.5rem; border-radius: 16px;
+  width: 650px; border: 1px solid rgba(139, 92, 246, 0.3);
+  box-shadow: 0 0 40px -5px rgba(139, 92, 246, 0.3);
+}
+.close-btn { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-subtle); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; float: right; transition: all 0.2s;}
+.close-btn:hover { color: white; border-color: white; }
+
+/* Custom Dark Calendar Styling */
+.dark-calendar {
+  background: var(--card-bg) !important;
+  color: white !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: 12px;
+  padding: 15px;
+  width: 100% !important;
+}
+.react-calendar__tile { color: white !important; padding: 1em 0.5em !important; }
+.react-calendar__tile:hover { background: rgba(255,255,255,0.1) !important; border-radius: 8px; }
+.react-calendar__tile--active { background: var(--primary-color) !important; color: white !important; border-radius: 8px; font-weight: bold; }
+.react-calendar__navigation button { color: white !important; font-weight: bold; font-size: 1.2rem; }
+.react-calendar__month-view__days__day--weekend { color: #f85149 !important; }
+.react-calendar__month-view__days__day--neighboringMonth { color: rgba(255,255,255,0.2) !important; }
+
+
+/* Tactical Menu Styles */
+.action-dots-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+  transition: color 0.2s;
+}
+.action-dots-btn:hover {
+  color: var(--primary-color);
+}
+.tactical-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  min-width: 120px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+.tactical-menu button {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.tactical-menu button:last-child {
+  border-bottom: none;
+}
+.tactical-menu button:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+/* Antigravity Glow UI Utilities */
+.label-proto {
+  display: block;
+  color: var(--primary-color);
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.badge {
+  padding: 0.35rem 0.85rem;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.badge-active {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success-color);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+}
+
+.badge-trial {
+  background: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.1);
+}
+
+.badge-expired {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger-color);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+}
+
+.company-logo-frame {
+  height: 28px;
+  padding: 3px;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+  display: inline-block;
+}
