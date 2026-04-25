@@ -7,7 +7,8 @@
     "node": "18.x"
   },
   "prisma": {
-    "schema": "../database/schema.prisma"
+    "schema": "../database/schema.prisma",
+    "seed": "node prisma/seed.js"
   },
   "scripts": {
     "start": "node index.js",
