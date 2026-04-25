@@ -64,17 +64,21 @@ const LandingView = ({ onLogin, onSignup, onShowPrivacy, onShowTerms }) => {
                         Solutions
                     </button>
                     <button onClick={onLogin} className="hover:text-blue-600 transition-colors">Employee Portal</button>
-                    { (isInstallable || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) && (
-                        <button 
-                            onClick={() => isInstallable ? installPWA() : setShowInstallGuide(true)}
-                            className="bg-amber-100/50 text-[#103e7a] px-4 py-1.5 rounded-full font-black text-[10px] flex items-center gap-2 border border-amber-200 animate-pulse"
-                        >
-                            <Zap size={12} fill="currentColor" /> GET APP
-                        </button>
-                    )}
+                    <button 
+                        onClick={() => isInstallable ? installPWA() : setShowInstallGuide(true)}
+                        className="bg-amber-100/50 text-[#103e7a] px-4 py-1.5 rounded-full font-black text-[10px] flex items-center gap-2 border border-amber-200 animate-pulse"
+                    >
+                        <Zap size={12} fill="currentColor" /> GET APP
+                    </button>
                     <motion.button whileHover={{ scale: 1.05 }} onClick={scrollToQuickStart} className="bg-[#103e7a] text-white px-6 py-2 rounded-full font-black text-[12px] uppercase shadow-lg shadow-blue-900/20">Book a Demo</motion.button>
                 </div>
                 <div className="md:hidden flex items-center gap-4">
+                    <button 
+                        onClick={() => isInstallable ? installPWA() : setShowInstallGuide(true)}
+                        className="bg-amber-100/50 text-[#103e7a] px-3 py-1 rounded-full font-black text-[9px] flex items-center gap-1 border border-amber-200"
+                    >
+                        <Zap size={10} fill="currentColor" /> GET APP
+                    </button>
                     <button 
                         onClick={() => setShowMobileMenu(true)}
                         className="p-2 text-[#103e7a] hover:bg-blue-50/50 rounded-xl transition-colors"
@@ -131,14 +135,12 @@ const LandingView = ({ onLogin, onSignup, onShowPrivacy, onShowTerms }) => {
                                     >
                                         Portal
                                     </button>
-                                    {(isInstallable || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) && (
-                                        <button 
-                                            onClick={() => { setShowMobileMenu(false); isInstallable ? installPWA() : setShowInstallGuide(true); }}
-                                            className="text-left text-2xl font-black text-[#eab308] uppercase italic tracking-tighter hover:text-amber-600 transition-colors flex items-center gap-3"
-                                        >
-                                            <Zap size={20} fill="currentColor" /> GET APP
-                                        </button>
-                                    )}
+                                    <button 
+                                        onClick={() => { setShowMobileMenu(false); isInstallable ? installPWA() : setShowInstallGuide(true); }}
+                                        className="text-left text-2xl font-black text-[#eab308] uppercase italic tracking-tighter hover:text-amber-600 transition-colors flex items-center gap-3"
+                                    >
+                                        <Zap size={20} fill="currentColor" /> GET APP
+                                    </button>
                                 </div>
 
                                 <button 
@@ -173,23 +175,21 @@ const LandingView = ({ onLogin, onSignup, onShowPrivacy, onShowTerms }) => {
                         <motion.button whileHover={{ scale: 1.05 }} onClick={onLogin} className="text-white hover:text-blue-100 transition-colors">
                             Admin Login
                         </motion.button>
-                        {(isInstallable || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) && (
-                            <motion.button 
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1, boxShadow: ["0 0 0px 0px rgba(234,179,8,0)", "0 0 20px 5px rgba(234,179,8,0.3)", "0 0 0px 0px rgba(234,179,8,0)"] }}
-                                transition={{ 
-                                    opacity: { duration: 0.3 },
-                                    scale: { duration: 0.3 },
-                                    boxShadow: { repeat: Infinity, duration: 2 }
-                                }}
-                                whileHover={{ scale: 1.05 }} 
-                                onClick={() => isInstallable ? installPWA() : setShowInstallGuide(true)}
-                                className="bg-[#eab308] text-[#103e7a] px-8 py-3 rounded-2xl font-black text-[13px] flex items-center gap-3 shadow-2xl relative overflow-hidden group"
-                            >
-                                <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                                <Zap size={18} fill="currentColor" /> INSTALL TWISHHSYNC APP
-                            </motion.button>
-                        )}
+                        <motion.button 
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1, boxShadow: ["0 0 0px 0px rgba(234,179,8,0)", "0 0 20px 5px rgba(234,179,8,0.3)", "0 0 0px 0px rgba(234,179,8,0)"] }}
+                            transition={{ 
+                                opacity: { duration: 0.3 },
+                                scale: { duration: 0.3 },
+                                boxShadow: { repeat: Infinity, duration: 2 }
+                            }}
+                            whileHover={{ scale: 1.05 }} 
+                            onClick={() => isInstallable ? installPWA() : setShowInstallGuide(true)}
+                            className="bg-[#eab308] text-[#103e7a] px-8 py-3 rounded-2xl font-black text-[13px] flex items-center gap-3 shadow-2xl relative overflow-hidden group"
+                        >
+                            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                            <Zap size={18} fill="currentColor" /> INSTALL TWISHHSYNC APP
+                        </motion.button>
                     </div>
                 </motion.div>
                 
