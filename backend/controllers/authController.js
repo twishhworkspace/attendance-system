@@ -251,7 +251,11 @@ const verifyOTP = async (req, res) => {
             return res.status(403).json({ error: 'Your company access has been suspended by the platform administrator.' });
         }
 
-        if (!user.otpCode || user.otpCode !== otp) {
+        // Robust OTP matching (handles type mismatches and whitespace)
+        const storedOtp = user.otpCode?.toString().trim();
+        const inputOtp = otp?.toString().trim();
+
+        if (!storedOtp || storedOtp !== inputOtp) {
             return res.status(401).json({ error: 'Invalid verification code' });
         }
 
