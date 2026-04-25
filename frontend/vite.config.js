@@ -8,6 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'auto',
       includeAssets: ['favicon.svg', 'logo.png', 'icons.svg'],
       manifestFilename: 'manifest.json',
       manifest: {
@@ -16,39 +17,46 @@ export default defineConfig({
         short_name: 'TwishhSync',
         description: 'Next-Gen Enterprise Attendance & Field Operations Hub',
         start_url: './',
+        scope: './',
         theme_color: '#0f172a',
         background_color: '#0f172a',
         display: 'standalone',
         orientation: 'portrait-primary',
         icons: [
           {
-            src: 'logo.png',
+            src: '/logo.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'logo.png',
+            src: '/logo.png',
             sizes: '512x512',
             type: 'image/png'
           },
           {
-            src: 'logo.png',
+            src: '/logo.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'any'
+          },
+          {
+            src: '/logo.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
           }
         ],
         shortcuts: [
           {
             name: 'Check-In',
             url: '/',
-            icons: [{ src: 'logo.png', sizes: '192x192' }]
+            icons: [{ src: '/logo.png', sizes: '192x192' }]
           }
         ],
         categories: ['productivity', 'business']
       },
       workbox: {
-        maximumFileSizeToCacheInBytes: 3000000,
+        maximumFileSizeToCacheInBytes: 5000000,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2}'],
         runtimeCaching: [
           {
