@@ -1,4 +1,4 @@
-const prisma = require('../prisma/client');
+const prisma = require('../db');
 
 /**
  * Logs a sensitive administrative or security action to the database.

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 console.log("[MOUNT] BROADCAST ROUTES INITIALIZING...");
-const prisma = require('../prisma/client');
+const prisma = require('../db');
 
 // Fetch all active broadcasts for the global alert system
 router.get('/active', async (req, res) => {

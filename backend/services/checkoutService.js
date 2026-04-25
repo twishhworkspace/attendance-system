@@ -1,4 +1,4 @@
-const prisma = require('../prisma/client');
+const prisma = require('../db');
 
 /**
  * Performs auto-checkout for all employees who missed their end-of-shift checkout.

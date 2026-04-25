@@ -1,5 +1,5 @@
 const cron = require('node-cron');
-const prisma = require('../prisma/client');
+const prisma = require('../db');
 
 /**
  * Initializes automated data retention tasks.

@@ -1,4 +1,4 @@
-const prisma = require('../prisma/client');
+const prisma = require('../db');
 
 const runAutoCheckout = async () => {
     console.log('◇ Running Handshake Maintenance Cycle...');
