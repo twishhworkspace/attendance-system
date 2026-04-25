@@ -18,10 +18,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// 2. Handle Preflight (OPTIONS) requests globally
-app.options('*', cors());
-
-// 3. Security Headers (with CORS-friendly settings)
+// 2. Security Headers (with CORS-friendly settings)
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
