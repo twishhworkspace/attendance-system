@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
-const prisma = require('./prisma/client');
+const prisma = require('./db');
 const app = express();
 const PORT = process.env.PORT || 5000;
 

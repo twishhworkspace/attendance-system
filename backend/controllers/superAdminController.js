@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const xss = require('xss');
-const prisma = require('../prisma/client');
+const prisma = require('../db');
 
 const getGlobalStats = async (req, res) => {
   try {

@@ -1,5 +1,5 @@
 const xss = require('xss');
-const prisma = require('../prisma/client');
+const prisma = require('../db');
 
 const getOffices = async (req, res) => {
   try {

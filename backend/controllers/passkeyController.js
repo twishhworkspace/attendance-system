@@ -4,7 +4,7 @@ const {
     generateAuthenticationOptions,
     verifyAuthenticationResponse,
 } = require('@simplewebauthn/server');
-const prisma = require('../prisma/client');
+const prisma = require('../db');
 const jwt = require('jsonwebtoken');
 const { logAction } = require('../utils/logger');
 

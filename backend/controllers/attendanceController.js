@@ -1,4 +1,4 @@
-const prisma = require('../prisma/client');
+const prisma = require('../db');
 const { isWithinRange } = require('../utils/geofencing');
 const { logAction } = require('../utils/logger');
 

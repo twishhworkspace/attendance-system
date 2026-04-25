@@ -1,6 +1,6 @@
 const xss = require('xss');
 const bcrypt = require('bcryptjs');
-const prisma = require('../prisma/client');
+const prisma = require('../db');
 const { logAction } = require('../utils/logger');
 const { runMaintenanceCycle } = require('../services/maintenanceService');
 

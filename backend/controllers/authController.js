@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const { sendOTP } = require('../utils/email');
 const { logAction } = require('../utils/logger');
 const crypto = require('crypto');
-const prisma = require('../prisma/client');
+const prisma = require('../db');
 
 const login = async (req, res) => {
   const { email, password } = req.body;

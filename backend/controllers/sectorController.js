@@ -1,4 +1,4 @@
-const prisma = require('../prisma/client');
+const prisma = require('../db');
 
 const getSectors = async (req, res) => {
   try {

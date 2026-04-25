@@ -3,11 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "18.x"
+  },
+  "prisma": {
+    "schema": "../database/schema.prisma"
+  },
   "scripts": {
     "start": "node index.js",
-    "build": "prisma generate --schema=../database/schema.prisma",
-    "prisma:generate": "prisma generate --schema=../database/schema.prisma",
-    "prisma:deploy": "prisma migrate deploy --schema=../database/schema.prisma",
+    "build": "npx prisma generate --schema=../database/schema.prisma && npx prisma migrate deploy --schema=../database/schema.prisma",
+    "prisma:generate": "npx prisma generate --schema=../database/schema.prisma",
+    "prisma:deploy": "npx prisma migrate deploy --schema=../database/schema.prisma",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
