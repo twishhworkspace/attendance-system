@@ -9,11 +9,13 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'logo.png', 'icons.svg'],
+      manifestFilename: 'manifest.json',
       manifest: {
+        id: '/',
         name: 'TwishhSync | Workspace',
         short_name: 'TwishhSync',
         description: 'Next-Gen Enterprise Attendance & Field Operations Hub',
-        start_url: '/',
+        start_url: './',
         theme_color: '#0f172a',
         background_color: '#0f172a',
         display: 'standalone',
