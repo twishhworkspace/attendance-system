@@ -2,44 +2,46 @@
 
 A high-density, zero-trust attendance management platform featuring spatial verification and biometric (Passkey) authentication.
 
-## Project Structure
+## 🚀 Production Architecture
 
-This repository is organized into three primary tiers:
+This system is optimized for a split-tier deployment:
+- **Frontend**: React (Vite) deployed on **Vercel**.
+- **Backend**: Node/Express API deployed on **Render**.
+- **Database**: Managed **PostgreSQL** instance.
 
-- **[frontend/](file:///c:/Users/palpp/Downloads/Attendance%20System%20Web/frontend)**: React (Vite) application with a modular architectural design.
-- **[backend/](file:///c:/Users/palpp/Downloads/Attendance%20System%20Web/backend)**: Node/Express API powered by Prisma and SQLite.
-- **[database/](file:///c:/Users/palpp/Downloads/Attendance%20System%20Web/database)**: Centralized data layer containing the Prisma schema and the SQLite (`dev.db`) file.
+## 🛡️ Security Features
 
-## Local Setup
+- **Zero-Trust Auth**: JWT-based session management with Passkey (Biometric) support.
+- **Input Validation**: Strict schema enforcement using **Zod**.
+- **Hardened Middleware**: 
+    - `Helmet` for secure HTTP headers.
+    - `XSS-Clean` for cross-site scripting protection.
+    - `Express-Mongo-Sanitize` for injection prevention.
+    - `Express-Rate-Limit` to mitigate brute-force attempts.
+- **Cross-Domain Secure Cookies**: Pre-configured for split-domain hosting (`SameSite: None`, `Secure`).
 
-### 1. Prerequisites
-- Node.js (v18+)
-- npm
+## ⚙️ Deployment Configuration
 
-### 2. Installation
-From the root directory, install dependencies for both the frontend and backend:
-```bash
-npm run install:all
-```
+### Backend (Render)
+Set these environment variables in your Render Dashboard:
+- `DATABASE_URL`: Your PostgreSQL connection string.
+- `JWT_SECRET`: A secure random string for token signing.
+- `FRONTEND_URL`: Your Vercel deployment URL.
+- `NODE_ENV`: `production`
 
-### 3. Environment Configuration
-Copy the template files and fill in your local secrets:
-- `frontend/.env.example` -> `frontend/.env`
-- `backend/.env.example` -> `backend/.env`
+### Frontend (Vercel)
+Set this environment variable in your Vercel Dashboard:
+- `VITE_API_URL`: Your Render Web Service URL (ending in `/api`).
 
-### 4. Database Initialization
-Ensure the Prisma client is generated from the centralized schema:
-```bash
-npm run prisma:generate
-```
+## 🛠️ Local Development
 
-### 5. Running the Application
-To start the services individually from the root:
-- Backend: `npm run start:server`
-- Frontend: `npm run start:client`
+1. **Install Dependencies**: `npm run install:all`
+2. **Environment**: Copy `.env.example` to `.env` in both folders.
+3. **Database**: `npm run prisma:generate`
+4. **Run**: 
+    - `npm run start:server` (Backend)
+    - `npm run start:client` (Frontend)
 
-## Deployment
+---
 
-The architecture is designed for modular deployment:
-- **Frontend**: Can be deployed as a static site (e.g., Vercel, Netlify) using the `npm run build` command.
-- **Backend**: Can be deployed to any Node.js hosting provider (e.g., Railway, Render). Ensure the `DATABASE_URL` and `JWT_SECRET` variables are properly configured in the production environment.
+Developed with a focus on security, scalability, and ease of deployment.

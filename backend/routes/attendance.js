@@ -4,8 +4,10 @@ const { checkIn, checkOut, getStatus, verifyLocation } = require('../controllers
 const { dataSubmissionLimiter } = require('../middleware/rateLimiters');
 const { authenticateToken } = require('../middleware/auth');
 
-router.post('/check-in', authenticateToken, dataSubmissionLimiter, checkIn);
-router.post('/check-out', authenticateToken, dataSubmissionLimiter, checkOut);
+const { validate, checkInSchema, checkOutSchema } = require('../utils/validators');
+
+router.post('/check-in', authenticateToken, dataSubmissionLimiter, validate(checkInSchema), checkIn);
+router.post('/check-out', authenticateToken, dataSubmissionLimiter, validate(checkOutSchema), checkOut);
 router.post('/verify', authenticateToken, verifyLocation);
 router.get('/status', authenticateToken, getStatus);
 

@@ -17,7 +17,9 @@ const {
 const { strictAuthLimiter } = require('../middleware/rateLimiters');
 const { authenticateToken } = require('../middleware/auth');
 
-router.post('/login', strictAuthLimiter, login);
+const { validate, loginSchema } = require('../utils/validators');
+
+router.post('/login', strictAuthLimiter, validate(loginSchema), login);
 router.post('/register-company', strictAuthLimiter, registerCompany);
 
 // Biometric / Passkey Endpoints

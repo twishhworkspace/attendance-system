@@ -1,13 +1,13 @@
 // prisma/schema.prisma
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../backend/node_modules/.prisma/client"
+  provider   = "prisma-client-js"
+  output     = "../backend/node_modules/.prisma/client"
+  engineType = "library"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Company {

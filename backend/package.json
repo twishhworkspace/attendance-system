@@ -7,6 +7,7 @@
     "start": "node index.js",
     "build": "prisma generate --schema=../database/schema.prisma",
     "prisma:generate": "prisma generate --schema=../database/schema.prisma",
+    "prisma:deploy": "prisma migrate deploy --schema=../database/schema.prisma",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,9 +15,11 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@prisma/client": "^7.7.0",
+    "@prisma/adapter-better-sqlite3": "^7.8.0",
+    "@prisma/client": "^7.8.0",
     "@simplewebauthn/server": "^13.1.2",
     "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.9.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.0",
@@ -26,9 +29,10 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "node-cron": "^3.0.3",
-    "prisma": "^7.7.0",
+    "prisma": "^7.8.0",
     "xss": "^1.0.15",
-    "xss-clean": "^0.1.4"
+    "xss-clean": "^0.1.4",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "axios": "^1.15.0"
