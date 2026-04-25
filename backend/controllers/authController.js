@@ -255,7 +255,12 @@ const verifyOTP = async (req, res) => {
         const storedOtp = user.otpCode?.toString().trim();
         const inputOtp = otp?.toString().trim();
 
+        console.log(`[SECURITY_DEBUG] OTP Match Attempt for ${email}:`);
+        console.log(`  - Stored: [${storedOtp}]`);
+        console.log(`  - Input:  [${inputOtp}]`);
+
         if (!storedOtp || storedOtp !== inputOtp) {
+            console.log(`[SECURITY_DEBUG] Match Failed: Codes do not match.`);
             return res.status(401).json({ error: 'Invalid verification code' });
         }
 
