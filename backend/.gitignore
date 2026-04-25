@@ -1,0 +1,19 @@
+node_modules
+dist
+
+# Keep environment variables out of version control
+.env
+.env.local
+
+# Databases
+*.db
+*.db-shm
+*.db-wal
+
+# Prisma
+/generated/prisma
+/prisma/client.js
+
+# Logs
+*.log
+npm-debug.log*

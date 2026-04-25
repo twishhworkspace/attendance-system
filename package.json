@@ -1,0 +1,18 @@
+{
+  "name": "twishhsync-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix frontend && npm install --prefix backend",
+    "build:client": "npm run build --prefix frontend",
+    "prisma:generate": "npx prisma generate --schema=database/schema.prisma",
+    "start:server": "npm start --prefix backend",
+    "start:client": "npm run dev --prefix frontend",
+    "clean": "rimraf frontend/dist backend/dist"
+  },
+  "devDependencies": {
+    "@prisma/client": "^7.7.0",
+    "prisma": "^7.7.0",
+    "rimraf": "^6.0.1"
+  }
+}

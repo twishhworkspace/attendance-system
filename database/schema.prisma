@@ -1,0 +1,196 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../backend/node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  address     String?  // Optional HQ location
+  users       User[]
+  sectors     Sector[]
+  attendances Attendance[]
+  requests    OutLocationRequest[]
+  offices     Office[]
+  tickets     SupportTicket[]
+  status      String               @default("ACTIVE") // ACTIVE, SUSPENDED
+  createdAt   DateTime             @default(now())
+}
+
+model User {
+  id            String      @id @default(uuid())
+  email         String      @unique
+  password      String
+  name          String
+  role          String      @default("EMPLOYEE") // SUPER_ADMIN, COMPANY_ADMIN, EMPLOYEE
+  
+  companyId     String?
+  company       Company?     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  sectorId      String?
+  sector        Sector?     @relation(fields: [sectorId], references: [id])
+  
+  attendances   Attendance[]
+  requests      OutLocationRequest[]
+  
+  forgotCheckoutCount Int @default(0)
+
+  // Security & Hardware Binding
+  deviceId      String?
+  otpCode       String?
+  otpExpiry     DateTime?
+
+  // Biometric / Passkey Support
+  currentChallenge String?
+  authenticators   Authenticator[]
+  tickets          SupportTicket[]
+  ticketReplies    TicketReply[]
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Authenticator {
+  id                   String   @id @default(uuid())
+  credentialID         Bytes    @unique
+  credentialPublicKey  Bytes
+  counter              BigInt
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+  
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Sector {
+  id          String   @id @default(uuid())
+  name        String
+  
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  employees   User[]
+  createdAt   DateTime @default(now())
+
+  @@unique([name, companyId]) // Unique per company
+}
+
+model Attendance {
+  id              String   @id @default(uuid())
+  
+  companyId       String
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  checkIn         DateTime @default(now())
+  checkOut        DateTime?
+  checkInLocation String?  // Latitude, Longitude
+  checkInAccuracy Float?   // GPS precision in meters
+  checkOutLocation String?
+  checkOutAccuracy Float?
+  checkInIp       String?
+  status          String   @default("PRESENT") // PRESENT, LATE, ABSENT
+  verified        Boolean  @default(false)     // For AI verification
+  photoUrl        String?
+  notes           String?
+  isAutoCheckout  Boolean  @default(false)
+  createdAt       DateTime @default(now())
+}
+
+
+model OutLocationRequest {
+  id          String   @id @default(uuid())
+  
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  reason      String
+  location    String   // Current location when requested
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime? @updatedAt
+}
+
+model Office {
+  id          String   @id @default(uuid())
+  name        String
+  address     String
+  location    String   // Latitude, Longitude (e.g. "18.5204, 73.8567")
+  radius      Float    @default(100) // Default 100 meters
+  
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  startTime   String?  @default("08:00") // Working start time (e.g., "08:00")
+  endTime     String?  @default("20:00") // Working end time (e.g., "20:00")
+  createdAt   DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  companyId String?
+  userId    String?
+  action    String // e.g. "EMPLOYEE_DELETE", "ADMIN_PASSWORD_RESET"
+  details   String? // JSON or text details
+  ip        String?
+  createdAt DateTime @default(now())
+}
+
+model SystemBroadcast {
+  id        String   @id @default(uuid())
+  type      String // EMERGENCY, ANNOUNCEMENT
+  message   String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model SupportTicket {
+  id          String        @id @default(uuid())
+  companyId   String
+  company     Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject     String
+  description String
+  status      String        @default("OPEN") // OPEN, CLOSED
+  priority    String        @default("NORMAL") // LOW, NORMAL, HIGH, URGENT
+  replies     TicketReply[]
+  createdAt   DateTime      @default(now())
+}
+
+model TicketReply {
+  id       String        @id @default(uuid())
+  ticketId String
+  ticket   SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message  String
+  isAdmin  Boolean       @default(false)
+  createdAt DateTime     @default(now())
+}
+
+model ArchivedAttendance {
+  id               String    @id @default(uuid())
+  companyId        String
+  userId           String
+  checkIn          DateTime
+  checkOut         DateTime?
+  checkInLocation  String?
+  checkOutLocation String?
+  status           String
+  notes            String?
+  archivedAt       DateTime  @default(now())
+}
