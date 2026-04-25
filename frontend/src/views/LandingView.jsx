@@ -65,7 +65,13 @@ const LandingView = ({ onLogin, onSignup, onShowPrivacy, onShowTerms }) => {
                     </button>
                     <button onClick={onLogin} className="hover:text-blue-600 transition-colors">Employee Portal</button>
                     <button 
-                        onClick={() => isInstallable ? installPWA() : setShowInstallGuide(true)}
+                        onClick={() => {
+                            if (isInstallable) {
+                                installPWA();
+                            } else {
+                                showToast("Direct install not supported. Use 'Add to Home Screen' in your browser menu.", "info");
+                            }
+                        }}
                         className="bg-amber-100/50 text-[#103e7a] px-4 py-1.5 rounded-full font-black text-[10px] flex items-center gap-2 border border-amber-200 animate-pulse"
                     >
                         <Zap size={12} fill="currentColor" /> GET APP
@@ -74,7 +80,13 @@ const LandingView = ({ onLogin, onSignup, onShowPrivacy, onShowTerms }) => {
                 </div>
                 <div className="md:hidden flex items-center gap-4">
                     <button 
-                        onClick={() => isInstallable ? installPWA() : setShowInstallGuide(true)}
+                        onClick={() => {
+                            if (isInstallable) {
+                                installPWA();
+                            } else {
+                                showToast("Direct install not supported. Use 'Add to Home Screen' in your browser menu.", "info");
+                            }
+                        }}
                         className="bg-amber-100/50 text-[#103e7a] px-3 py-1 rounded-full font-black text-[9px] flex items-center gap-1 border border-amber-200"
                     >
                         <Zap size={10} fill="currentColor" /> GET APP
@@ -136,7 +148,14 @@ const LandingView = ({ onLogin, onSignup, onShowPrivacy, onShowTerms }) => {
                                         Portal
                                     </button>
                                     <button 
-                                        onClick={() => { setShowMobileMenu(false); isInstallable ? installPWA() : setShowInstallGuide(true); }}
+                                        onClick={() => {
+                                            setShowMobileMenu(false);
+                                            if (isInstallable) {
+                                                installPWA();
+                                            } else {
+                                                showToast("Direct install not supported by this browser. Please use the 'Add to Home Screen' option in your browser menu.", "info");
+                                            }
+                                        }}
                                         className="text-left text-2xl font-black text-[#eab308] uppercase italic tracking-tighter hover:text-amber-600 transition-colors flex items-center gap-3"
                                     >
                                         <Zap size={20} fill="currentColor" /> GET APP
@@ -184,7 +203,13 @@ const LandingView = ({ onLogin, onSignup, onShowPrivacy, onShowTerms }) => {
                                 boxShadow: { repeat: Infinity, duration: 2 }
                             }}
                             whileHover={{ scale: 1.05 }} 
-                            onClick={() => isInstallable ? installPWA() : setShowInstallGuide(true)}
+                            onClick={() => {
+                                if (isInstallable) {
+                                    installPWA();
+                                } else {
+                                    showToast("Direct install not supported. Use 'Add to Home Screen' in your browser menu.", "info");
+                                }
+                            }}
                             className="bg-[#eab308] text-[#103e7a] px-8 py-3 rounded-2xl font-black text-[13px] flex items-center gap-3 shadow-2xl relative overflow-hidden group"
                         >
                             <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
