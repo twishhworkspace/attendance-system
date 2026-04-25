@@ -63,6 +63,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const verifyOTP = async (email, otp) => {
+    const deviceId = localStorage.getItem('twishh_device_id');
+    const response = await api.post('auth/verify-otp', { email, otp, deviceId });
+    setUser(response.data.user);
+    return response.data.user;
+  };
+
   const setSession = (userData) => {
     setUser(userData);
   };
@@ -84,7 +91,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, registerPasskey, loginWithPasskey, setSession, loading }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, registerPasskey, loginWithPasskey, verifyOTP, setSession, loading }}>
       {children}
     </AuthContext.Provider>
   );
