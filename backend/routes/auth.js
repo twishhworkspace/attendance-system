@@ -6,7 +6,8 @@ const {
   updateProfile, 
   registerCompany,
   reportBug,
-  logout
+  logout,
+  verifyOTP
 } = require('../controllers/authController');
 const { strictAuthLimiter } = require('../middleware/rateLimiters');
 const { authenticateToken } = require('../middleware/auth');
@@ -14,6 +15,7 @@ const { authenticateToken } = require('../middleware/auth');
 const { validate, loginSchema } = require('../utils/validators');
 
 router.post('/login', strictAuthLimiter, validate(loginSchema), login);
+router.post('/verify-otp', strictAuthLimiter, verifyOTP);
 router.post('/register-company', strictAuthLimiter, registerCompany);
 
 router.get('/profile', authenticateToken, getProfile);
