@@ -14,7 +14,8 @@ const {
   createTicket,
   getCompanyTickets,
   getSpatialDensity,
-  resetStrikes
+  resetStrikes,
+  resetEmployeePassword
 } = require('../controllers/adminController');
 const { getPendingRequests, processRequest } = require('../controllers/outLocationController');
 const { getOffices, addOffice, deleteOffice, updateOffice } = require('../controllers/officeController');
@@ -32,6 +33,7 @@ router.post('/employees', addEmployee);
 router.get('/employees', getEmployees);
 router.put('/employees/:id', updateEmployee);
 router.delete('/employees/:id', deleteEmployee);
+router.post('/employees/:id/reset-password', resetEmployeePassword);
 router.post('/employees/:id/reset-strikes', resetStrikes);
 router.get('/analytics', getAnalytics);
 router.get('/reports/attendance', downloadAttendanceReport);

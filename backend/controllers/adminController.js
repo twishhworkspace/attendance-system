@@ -209,6 +209,36 @@ const resetStrikes = async (req, res) => {
   }
 };
 
+const resetEmployeePassword = async (req, res) => {
+  const { id } = req.params;
+  const { password } = req.body;
+
+  if (!password || password.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await prisma.user.update({
+      where: { id, companyId: req.user.companyId },
+      data: { password: hashedPassword }
+    });
+
+    res.json({ message: 'Employee password reset successfully' });
+
+    // Log Security Event
+    await logAction({
+      companyId: req.user.companyId,
+      userId: req.user.id,
+      action: 'ADMIN_PASSWORD_RESET',
+      details: `Admin reset password for employee ID: ${id}`,
+      ip: req.ip
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
+};
+
 const getEmployees = async (req, res) => {
   try {
     const employees = await prisma.user.findMany({
@@ -445,5 +475,6 @@ module.exports = {
   createTicket,
   getCompanyTickets,
   getSpatialDensity,
-  resetStrikes
+  resetStrikes,
+  resetEmployeePassword
 };

@@ -13,7 +13,8 @@ import {
     Calendar,
     Loader2,
     CheckCircle2,
-    AlertCircle
+    AlertCircle,
+    Key
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -35,6 +36,7 @@ const PersonnelView = ({ onNavigateToReport, globalSearch }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [activeMenu, setActiveMenu] = useState(null);
     const [confirmDelete, setConfirmDelete] = useState(null);
+    const [resetPasswordEmployee, setResetPasswordEmployee] = useState(null);
 
     const fetchData = useCallback(async () => {
         if (!isAdmin) return;
@@ -103,6 +105,22 @@ const PersonnelView = ({ onNavigateToReport, globalSearch }) => {
             fetchData();
         } catch (err) {
             showToast(err.response?.data?.error || "Failed to delete personnel", "error");
+        }
+    };
+
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        try {
+            await axios.post(`admin/employees/${resetPasswordEmployee.id}/reset-password`, {
+                password: e.target.p.value
+            });
+            showToast("Password Reset Successful", "success");
+            setResetPasswordEmployee(null);
+        } catch (err) {
+            showToast(err.response?.data?.error || "Reset Failed", "error");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -235,6 +253,12 @@ const PersonnelView = ({ onNavigateToReport, globalSearch }) => {
                                                             <Edit2 size={14} className="text-violet-500" /> Edit Node
                                                         </button>
                                                         <button 
+                                                            onClick={() => { setResetPasswordEmployee(emp); setActiveMenu(null); }}
+                                                            className="w-full text-left px-6 py-3 text-[10px] font-black uppercase tracking-widest text-white hover:bg-white/5 flex items-center gap-3 transition-colors"
+                                                        >
+                                                            <Key size={14} className="text-violet-500" /> Reset Password
+                                                        </button>
+                                                        <button 
                                                             onClick={async () => {
                                                                 try {
                                                                     await axios.post(`admin/employees/${emp.id}/reset-strikes`);
@@ -341,6 +365,31 @@ const PersonnelView = ({ onNavigateToReport, globalSearch }) => {
                             <button onClick={() => setConfirmDelete(null)} className="flex-1 px-8 py-4 bg-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">Cancel</button>
                             <button onClick={() => handleDeleteEmployee(confirmDelete.id)} className="flex-1 px-8 py-4 bg-rose-600 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-rose-500 transition-all shadow-lg shadow-rose-900/20">Delete</button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {resetPasswordEmployee && (
+                <div className="modal-overlay">
+                    <div className="modal-content w-[400px]">
+                        <button className="close-btn" onClick={() => setResetPasswordEmployee(null)}><X size={20} /></button>
+                        <div className="flex flex-col items-center mb-8">
+                            <div className="w-16 h-16 bg-violet-500/10 rounded-full flex items-center justify-center mb-4">
+                                <Key size={24} className="text-violet-500" />
+                            </div>
+                            <h3 className="italic font-black text-xl uppercase">Reset Password</h3>
+                            <p className="text-[9px] font-black uppercase text-slate-700 tracking-widest mt-1">{resetPasswordEmployee.name}</p>
+                        </div>
+                        <form onSubmit={handleResetPassword} className="space-y-8">
+                            <div>
+                                <label className="label-proto">New Protocol Password</label>
+                                <input name="p" type="password" required placeholder="Minimum 6 characters" minLength={6} autoComplete="off" />
+                                <p className="text-[8px] font-bold text-slate-600 mt-2 uppercase italic tracking-widest">Provide this to the employee after reset.</p>
+                            </div>
+                            <button className="btn-primary h-14" disabled={isSubmitting}>
+                                {isSubmitting ? <Loader2 className="animate-spin mx-auto" /> : 'OVERWRITE PASSWORD'}
+                            </button>
+                        </form>
                     </div>
                 </div>
             )}
