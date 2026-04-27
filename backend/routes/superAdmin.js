@@ -16,8 +16,7 @@ const {
   toggleBroadcast,
   getGlobalTickets,
   replyToTicket,
-  runArchivalProtocol,
-  getGlobalLogs
+  runArchivalProtocol
 } = require('../controllers/superAdminController');
 
 // All routes here require Master Control Authorization
@@ -42,6 +41,5 @@ router.post('/tickets/:ticketId/reply', replyToTicket);
 
 // Maintenance Routes
 router.post('/maintenance/archive', runArchivalProtocol);
-router.get('/logs', getGlobalLogs);
 
 module.exports = router;
