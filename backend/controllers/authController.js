@@ -78,6 +78,15 @@ const login = async (req, res) => {
             const sent = await sendOTP(user.email, otp);
             if (!sent) return res.status(500).json({ error: 'Verification Service Unstable. Please try again later.' });
 
+            // LOG SECURITY EVENT: OTP GENERATION
+            await logAction({
+                companyId: user.companyId,
+                userId: user.id,
+                action: 'OTP_GENERATED',
+                details: `OTP generated for new device switch (${clientDeviceId})`,
+                ip: req.ip
+            });
+
             return res.json({ 
                 status: 'REQUIRE_OTP', 
                 message: 'New device detected. Please enter the verification code sent to your email.' 
@@ -89,6 +98,15 @@ const login = async (req, res) => {
             await prisma.user.update({
                 where: { id: user.id },
                 data: { deviceId: clientDeviceId }
+            });
+
+            // LOG SECURITY EVENT: FIRST DEVICE BINDING
+            await logAction({
+                companyId: user.companyId,
+                userId: user.id,
+                action: 'DEVICE_BOUND_INITIAL',
+                details: `Initial device hardware binding established (${clientDeviceId})`,
+                ip: req.ip
             });
         }
     }
@@ -327,6 +345,15 @@ const verifyOTP = async (req, res) => {
                 otpCode: null,
                 otpExpiry: null
             }
+        });
+
+        // LOG SECURITY EVENT: DEVICE BINDING UPDATED
+        await logAction({
+            companyId: user.companyId,
+            userId: user.id,
+            action: 'DEVICE_BOUND_UPDATED',
+            details: `Employee successfully verified and bound to new device (${deviceId})`,
+            ip: req.ip
         });
 
         const token = jwt.sign(
