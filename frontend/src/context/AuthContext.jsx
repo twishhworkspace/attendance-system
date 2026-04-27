@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { startRegistration, startAuthentication } from '@simplewebauthn/browser';
 import api from '../api/axios';
 
 const AuthContext = createContext();
@@ -37,46 +36,6 @@ export const AuthProvider = ({ children }) => {
         return response.data; // Return full response data for OTP detection
     };
 
-  const registerPasskey = async () => {
-    try {
-      console.log("[BIOMETRIC] Fetching registration options...");
-      const optionsRes = await api.get('auth/passkey/register-options');
-      
-      console.log("[BIOMETRIC] Starting browser-level registration...");
-      const attResp = await startRegistration(optionsRes.data);
-      
-      console.log("[BIOMETRIC] Sending verification to server...");
-      const verifyRes = await api.post('auth/passkey/verify-registration', attResp);
-      
-      console.log("[BIOMETRIC] Registration status:", verifyRes.data.verified);
-      return verifyRes.data.verified;
-    } catch (err) {
-      console.error('[BIOMETRIC_CRITICAL] Registration Failed:', err);
-      // If it's a browser error, we want to know the name (e.g., NotAllowedError)
-      if (err.name) console.error('[BIOMETRIC_ERROR_NAME]', err.name);
-      throw err;
-    }
-  };
-
-  const loginWithPasskey = async (email) => {
-    try {
-      console.log("[BIOMETRIC] Fetching login options for:", email);
-      const optionsRes = await api.get(`auth/passkey/login-options?email=${email}`);
-      
-      console.log("[BIOMETRIC] Starting browser-level authentication...");
-      const asseResp = await startAuthentication(optionsRes.data);
-      
-      console.log("[BIOMETRIC] Sending auth verification to server...");
-      const verifyRes = await api.post('auth/passkey/verify-login', { body: asseResp, email });
-      
-      setUser(verifyRes.data.user);
-      return verifyRes.data.user;
-    } catch (err) {
-      console.error('[BIOMETRIC_CRITICAL] Login Failed:', err);
-      throw err;
-    }
-  };
-
   const verifyOTP = async (email, otp) => {
     const deviceId = localStorage.getItem('twishh_device_id');
     const response = await api.post('auth/verify-otp', { email, otp, deviceId });
@@ -105,10 +64,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, registerPasskey, loginWithPasskey, verifyOTP, setSession, loading }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, verifyOTP, setSession, loading }}>
       {children}
     </AuthContext.Provider>
   );
+};
 };
 
 export const useAuth = () => useContext(AuthContext);

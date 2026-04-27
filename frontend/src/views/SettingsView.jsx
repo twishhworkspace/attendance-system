@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axios';
-import { Loader2, Fingerprint, CheckCircle2 } from 'lucide-react';
+import { Loader2, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 const SettingsView = () => {
-    const { user, registerPasskey } = useAuth();
+    const { user } = useAuth();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
-    const [biometricLoading, setBiometricLoading] = useState(false);
     const [company, setCompany] = useState(null);
     const [companyLoading, setCompanyLoading] = useState(false);
 
@@ -48,20 +47,6 @@ const SettingsView = () => {
         }
     };
 
-    const handleBiometricRegister = async () => {
-        setBiometricLoading(true);
-        try {
-            const success = await registerPasskey();
-            if (success) {
-                showToast("Biometric hardware linked successfully.", "success");
-            }
-        } catch (err) {
-            showToast(err.response?.data?.error || "Biometric registration failed. Please try again.", "error");
-        } finally {
-            setBiometricLoading(false);
-        }
-    };
-
     const handleCompanyUpdate = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -98,30 +83,6 @@ const SettingsView = () => {
                         {loading ? <Loader2 className="animate-spin mx-auto" /> : 'UPDATE IDENTITY'}
                     </button>
                 </form>
-
-                {/* Biometric Section */}
-                <div className="mt-16 pt-10 border-t border-white/5">
-                    <h4 className="italic font-black text-lg uppercase tracking-tighter mb-2">Biometric Hardware Link</h4>
-                    <p className="text-[10px] font-black uppercase text-slate-700 tracking-[0.2em] mb-8">Bind your fingerprint or faceID for rapid access</p>
-                    
-                    <button 
-                        onClick={handleBiometricRegister} 
-                        disabled={biometricLoading}
-                        className={`w-full md:w-auto px-8 h-14 rounded-2xl flex items-center justify-center gap-4 transition-all ${biometricLoading ? 'bg-slate-800' : 'bg-violet-600/10 border-2 border-violet-500/30 hover:bg-violet-500/20'}`}
-                    >
-                        {biometricLoading ? (
-                            <Loader2 className="animate-spin text-violet-500" />
-                        ) : (
-                            <>
-                                <Fingerprint className="text-violet-500" />
-                                <span className="text-[11px] font-black italic uppercase tracking-widest text-violet-500">
-                                    REGISTER THIS DEVICE
-                                </span>
-                            </>
-                        )}
-                    </button>
-                    <p className="text-[8px] font-bold text-slate-500 mt-4 uppercase italic tracking-widest">Recommended for mobile punch terminals.</p>
-                </div>
             </div>
 
             {isAdmin && (

@@ -8,12 +8,6 @@ const {
   reportBug,
   logout
 } = require('../controllers/authController');
-const { 
-  getRegOptions, 
-  verifyReg, 
-  getAuthOptions, 
-  verifyAuth 
-} = require('../controllers/passkeyController');
 const { strictAuthLimiter } = require('../middleware/rateLimiters');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -21,12 +15,6 @@ const { validate, loginSchema } = require('../utils/validators');
 
 router.post('/login', strictAuthLimiter, validate(loginSchema), login);
 router.post('/register-company', strictAuthLimiter, registerCompany);
-
-// Biometric / Passkey Endpoints
-router.get('/passkey/register-options', authenticateToken, strictAuthLimiter, getRegOptions);
-router.post('/passkey/verify-registration', authenticateToken, strictAuthLimiter, verifyReg);
-router.get('/passkey/login-options', strictAuthLimiter, getAuthOptions);
-router.post('/passkey/verify-login', strictAuthLimiter, verifyAuth);
 
 router.get('/profile', authenticateToken, getProfile);
 router.put('/profile', authenticateToken, updateProfile);

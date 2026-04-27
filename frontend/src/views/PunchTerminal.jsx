@@ -172,18 +172,6 @@ const PunchTerminal = ({ setView }) => {
                 </p>
                 
                     <div className="flex flex-col gap-4 items-center w-full max-w-sm">
-                        {user?.authenticators?.length === 0 && (
-                            <button 
-                                onClick={() => setView('settings')}
-                                className="w-full p-4 bg-violet-600/10 border border-violet-500/20 rounded-2xl flex items-center justify-center gap-3 group hover:bg-violet-500/20 transition-all mb-2"
-                            >
-                                <Fingerprint className="text-violet-500 group-hover:scale-110 transition-transform" />
-                                <div className="text-left">
-                                    <p className="text-[10px] font-black text-white uppercase italic">Enable Fast Login</p>
-                                    <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Link Fingerprint / FaceID</p>
-                                </div>
-                            </button>
-                        )}
                         {loading ? (
                         <Skeleton width="100%" height={64} style={{ borderRadius: '16px' }} />
                     ) : (

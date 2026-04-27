@@ -120,7 +120,7 @@ const getProfile = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
-      select: { id: true, name: true, email: true, role: true, sector: true, companyId: true, company: true, forgotCheckoutCount: true, authenticators: true }
+      select: { id: true, name: true, email: true, role: true, sector: true, companyId: true, company: true, forgotCheckoutCount: true }
     });
     res.json(user);
   } catch (err) {

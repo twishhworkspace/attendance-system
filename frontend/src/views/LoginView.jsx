@@ -121,23 +121,6 @@ const LoginView = ({ onBack, biometricEmail, setBiometricEmail, isStandalone }) 
                 </h3>
                 
                 <div className="space-y-6">
-                    {biometricEmail && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && (
-                        <button 
-                            onClick={async () => {
-                                try {
-                                    await loginWithPasskey(biometricEmail);
-                                    showToast("Biometric Signature Verified", "success");
-                                } catch (err) { 
-                                    showToast(err.response?.data?.error || "Biometric Authentication Failed", "error");
-                                }
-                            }}
-                            className="w-full h-16 bg-violet-600/10 border-2 border-violet-500/30 rounded-2xl flex items-center justify-center gap-4 group hover:bg-violet-500/20 transition-all mb-4"
-                        >
-                            <Fingerprint className="text-violet-500 group-hover:scale-110 transition-transform" />
-                            <span className="text-[11px] font-black italic uppercase tracking-widest text-violet-500">Touch to Login</span>
-                        </button>
-                    )}
-
                     <form onSubmit={handleLogin} className="space-y-8 text-left">
                         <div>
                             <label className="label-proto">Email / Mobile Number</label>
