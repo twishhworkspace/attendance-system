@@ -35,9 +35,8 @@ const login = async (req, res) => {
 
     const clientDeviceId = req.body.deviceId;
 
-    // Device Verification Logic
-    // If user's role is EMPLOYEE or COMPANY_ADMIN (not Super Admins who might use various terminals)
-    if (user.role !== 'SUPER_ADMIN' && process.env.SECURITY_DISABLED !== 'true') {
+    // Device Verification Logic: Only enforce for EMPLOYEES
+    if (user.role === 'EMPLOYEE' && process.env.SECURITY_DISABLED !== 'true') {
         if (user.deviceId && user.deviceId !== clientDeviceId) {
             // New Device Detected - Generate OTP
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
