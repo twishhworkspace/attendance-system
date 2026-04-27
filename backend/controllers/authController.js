@@ -31,6 +31,15 @@ const login = async (req, res) => {
     });
     if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
+    // RESTRICTION: Employees are restricted to Mobile Access only
+    const ua = req.headers['user-agent'] || '';
+    const isMobile = /mobile|iphone|ipad|android/i.test(ua);
+    if (user.role === 'EMPLOYEE' && !isMobile && process.env.SECURITY_DISABLED !== 'true') {
+        return res.status(403).json({ 
+            error: 'Security Protocol: Employee access is restricted to mobile devices only. Please log in from your phone.' 
+        });
+    }
+
     if (user.company?.status === 'SUSPENDED' && user.role !== 'SUPER_ADMIN') {
         return res.status(403).json({ error: 'Your company access has been suspended by the platform administrator.' });
     }
@@ -273,6 +282,15 @@ const verifyOTP = async (req, res) => {
             include: { company: true }
         });
         if (!user) return res.status(401).json({ error: 'Invalid session' });
+
+        // RESTRICTION: Employees are restricted to Mobile Access only
+        const ua = req.headers['user-agent'] || '';
+        const isMobile = /mobile|iphone|ipad|android/i.test(ua);
+        if (user.role === 'EMPLOYEE' && !isMobile && process.env.SECURITY_DISABLED !== 'true') {
+            return res.status(403).json({ 
+                error: 'Security Protocol: Employee access is restricted to mobile devices only. Please log in from your phone.' 
+            });
+        }
 
         if (user.company?.status === 'SUSPENDED' && user.role !== 'SUPER_ADMIN') {
             return res.status(403).json({ error: 'Your company access has been suspended by the platform administrator.' });
