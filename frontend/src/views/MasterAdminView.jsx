@@ -25,7 +25,6 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
     const [companies, setCompanies] = useState([]);
     const [tickets, setTickets] = useState([]);
     const [broadcasts, setBroadcasts] = useState([]);
-    const [broadcasts, setBroadcasts] = useState([]);
     const [loading, setLoading] = useState(true);
     
     // Management State

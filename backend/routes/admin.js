@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 console.log("[MOUNT] ADMIN ROUTES INITIALIZING...");
-const { 
-  getAttendanceSummary, 
-  getAllAttendance, 
-  addEmployee, 
+const {
+  getAttendanceSummary,
+  getAllAttendance,
+  addEmployee,
   getEmployees,
   updateEmployee,
   deleteEmployee,
@@ -15,7 +15,8 @@ const {
   getCompanyTickets,
   getSpatialDensity,
   resetStrikes,
-  resetEmployeePassword
+  resetEmployeePassword,
+  getAuditLogs
 } = require('../controllers/adminController');
 const { getPendingRequests, processRequest } = require('../controllers/outLocationController');
 const { getOffices, addOffice, deleteOffice, updateOffice } = require('../controllers/officeController');
@@ -29,6 +30,7 @@ router.use(authenticateToken);
 router.use(authorizeRoles('ADMIN', 'COMPANY_ADMIN', 'SUPER_ADMIN'));
 router.use(adminActionLimiter);
 
+router.get('/audit-logs', getAuditLogs);
 router.get('/summary', getAttendanceSummary);
 router.get('/logs', getAllAttendance);
 router.post('/employees', addEmployee);
