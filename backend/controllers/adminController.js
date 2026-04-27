@@ -20,7 +20,8 @@ const getAttendanceSummary = async (req, res) => {
     });
 
     const checkedInCount = attendancesToday.length;
-    const presentCount = attendancesToday.filter(a => a.status === 'PRESENT').length;
+    // Both PRESENT and LATE status mean the employee is physically present/synced
+    const presentCount = attendancesToday.filter(a => a.status === 'PRESENT' || a.status === 'LATE').length;
     const existingLateCount = attendancesToday.filter(a => a.status === 'LATE').length;
     
     const notCheckedInCount = totalEmployees - checkedInCount;
@@ -255,7 +256,8 @@ const getAnalytics = async (req, res) => {
 
       return {
         name: date.toLocaleDateString('en-US', { weekday: 'short' }),
-        Present: present,
+        // For the graph, 'Present' includes both on-time and late employees
+        Present: present + late,
         Late: finalLate,
         Absent: finalAbsent
       };

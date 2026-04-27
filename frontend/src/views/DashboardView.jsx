@@ -33,7 +33,12 @@ const DashboardView = () => {
     }, []);
 
     useEffect(() => { 
-        if (isAdmin) fetchData(); 
+        if (isAdmin) {
+            fetchData(); 
+            // Live Feed: Refresh telemetry every 30 seconds
+            const interval = setInterval(fetchData, 30000);
+            return () => clearInterval(interval);
+        }
     }, [fetchData, isAdmin]);
 
     if (!isAdmin) return <div className="p-20 text-center opacity-40">Personnel access only.</div>;
