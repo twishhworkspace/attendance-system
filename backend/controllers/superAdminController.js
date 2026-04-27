@@ -175,6 +175,42 @@ const replyToTicket = async (req, res) => {
   }
 };
 
+const runArchivalProtocol = async (req, res) => {
+  try {
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+    const oldLogs = await prisma.attendance.findMany({
+      where: { createdAt: { lt: oneYearAgo } }
+    });
+
+    if (oldLogs.length === 0) {
+      return res.json({ message: 'No records found matching archival criteria.' });
+    }
+
+    const archiveData = oldLogs.map(log => ({
+      id: log.id,
+      companyId: log.companyId,
+      userId: log.userId,
+      checkIn: log.checkIn,
+      checkOut: log.checkOut,
+      checkInLocation: log.checkInLocation,
+      checkOutLocation: log.checkOutLocation,
+      status: log.status,
+      notes: log.notes
+    }));
+
+    await prisma.$transaction([
+      prisma.archivedAttendance.createMany({ data: archiveData }),
+      prisma.attendance.deleteMany({ where: { id: { in: oldLogs.map(l => l.id) } } })
+    ]);
+
+    res.json({ message: `Successfully archived ${oldLogs.length} attendance records.` });
+  } catch (err) {
+    res.status(500).json({ error: 'Archival protocol failed.' });
+  }
+};
+
 module.exports = {
   getGlobalStats,
   getAllCompanies,
@@ -186,5 +222,6 @@ module.exports = {
   getBroadcasts,
   toggleBroadcast,
   getGlobalTickets,
-  replyToTicket
+  replyToTicket,
+  runArchivalProtocol
 };

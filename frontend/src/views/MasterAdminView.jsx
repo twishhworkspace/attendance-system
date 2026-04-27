@@ -236,8 +236,12 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
             </div>
 
             <div className="flex gap-4">
-
-
+                <button 
+                    onClick={handleArchival}
+                    className="px-6 py-2 bg-amber-500/10 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-amber-500 hover:bg-amber-500 hover:text-black transition-all"
+                >
+                    Archival Protocol
+                </button>
             </div>
 
             {loading ? (
