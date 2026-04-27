@@ -16,11 +16,15 @@ const login = async (req, res) => {
   }
 
   try {
+    // Normalize identifier for mobile number search (strip spaces, dashes, etc.)
+    const normalizedIdentifier = email.replace(/\D/g, '');
+    
     const user = await prisma.user.findFirst({ 
         where: {
             OR: [
                 { email: email },
-                { mobileNumber: email } // 'email' variable now acts as a general 'identifier'
+                { mobileNumber: email },
+                { mobileNumber: normalizedIdentifier.length >= 10 ? normalizedIdentifier : undefined }
             ]
         },
         include: { company: true }
@@ -257,11 +261,13 @@ const verifyOTP = async (req, res) => {
     }
 
     try {
+        const normalizedIdentifier = email.replace(/\D/g, '');
         const user = await prisma.user.findFirst({ 
             where: {
                 OR: [
                     { email: email },
-                    { mobileNumber: email }
+                    { mobileNumber: email },
+                    { mobileNumber: normalizedIdentifier.length >= 10 ? normalizedIdentifier : undefined }
                 ]
             },
             include: { company: true }
