@@ -15,8 +15,7 @@ const {
   getCompanyTickets,
   getSpatialDensity,
   resetStrikes,
-  resetEmployeePassword,
-  getAuditLogs
+  resetEmployeePassword
 } = require('../controllers/adminController');
 const { getPendingRequests, processRequest } = require('../controllers/outLocationController');
 const { getOffices, addOffice, deleteOffice, updateOffice } = require('../controllers/officeController');
@@ -30,7 +29,6 @@ router.use(authenticateToken);
 router.use(authorizeRoles('ADMIN', 'COMPANY_ADMIN', 'SUPER_ADMIN'));
 router.use(adminActionLimiter);
 
-router.get('/audit-logs', getAuditLogs);
 router.get('/summary', getAttendanceSummary);
 router.get('/logs', getAllAttendance);
 router.post('/employees', addEmployee);
