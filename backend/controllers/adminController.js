@@ -114,7 +114,7 @@ const addEmployee = async (req, res) => {
       data: {
         name: xss(name),
         email: xss(email),
-        mobileNumber: mobileNumber ? xss(mobileNumber) : null,
+        mobileNumber: mobileNumber ? mobileNumber.replace(/\D/g, '') : null,
         password: hashedPassword,
         role: 'EMPLOYEE',
         companyId,
@@ -150,7 +150,7 @@ const updateEmployee = async (req, res) => {
       data: { 
         name: name ? xss(name) : undefined, 
         email: email ? xss(email) : undefined, 
-        mobileNumber: mobileNumber ? xss(mobileNumber) : undefined,
+        mobileNumber: mobileNumber ? mobileNumber.replace(/\D/g, '') : undefined,
         sectorId: sectorId || null 
       }
     });
