@@ -30,7 +30,7 @@ const PrivacyView = ({ onBack }) => {
                                 <h2 className="text-2xl font-black italic uppercase tracking-tight">1. Data Collection</h2>
                             </div>
                             <p className="text-lg leading-relaxed text-slate-600 font-medium">
-                                TwishhSync collects information necessary to provide high-fidelity attendance tracking services. This includes company name, administrator contact details, and employee professional information.
+                                TwishhSync collects information necessary to provide high-fidelity attendance tracking services. This includes company name, administrator contact details, employee professional information, and hardware-binding identifiers (Device IDs) to ensure account security and prevent unauthorized access. Activity logs (audit trails of specific user clicks/actions) are not collected to prioritize user privacy and system efficiency.
                             </p>
                         </section>
 
@@ -60,7 +60,7 @@ const PrivacyView = ({ onBack }) => {
                                 <h2 className="text-2xl font-black italic uppercase tracking-tight">4. Data Retention</h2>
                             </div>
                             <p className="text-lg leading-relaxed text-slate-600 font-medium">
-                                By default, TwishhSync retains attendance logs for a period of <span className="font-bold text-[#103e7a]">3 years</span> to comply with labor laws and audit requirements, after which data is automatically purged from our production clusters.
+                                To maintain peak system performance, attendance records older than <span className="font-bold text-[#103e7a]">1 year</span> are migrated to a secure archival layer. TwishhSync retains these archived logs for a total period of <span className="font-bold text-[#103e7a]">3 years</span> to comply with labor laws and audit requirements, after which data is permanently purged from our clusters.
                             </p>
                         </section>
                     </div>

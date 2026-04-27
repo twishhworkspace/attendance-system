@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'; // Strategic Handshake Active
 import axios from '../api/axios';
-import { 
-    Globe, 
-    Building, 
-    Users, 
-    Activity, 
-    ShieldAlert, 
-    MessageSquare, 
-    Radio, 
+import {
+    Globe,
+    Building,
+    Users,
+    Activity,
+    ShieldAlert,
+    MessageSquare,
+    Radio,
     Lock,
     Loader2,
     Trash2,
@@ -26,7 +26,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
     const [tickets, setTickets] = useState([]);
     const [broadcasts, setBroadcasts] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     // Management State
     const [editingCompany, setEditingCompany] = useState(null);
     const [deletingCompany, setDeletingCompany] = useState(null);
@@ -42,7 +42,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
 
     const { showToast } = useToast();
     const { user, setSession } = useAuth();
-    
+
     const [profileForm, setProfileForm] = useState({
         name: user?.name || '',
         email: user?.email || '',
@@ -164,7 +164,14 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
         } finally { setIsSaving(false); }
     };
 
-
+    const handleArchival = async () => {
+        if (!window.confirm("EXECUTE ARCHIVAL PROTOCOL? Records older than 1 year will be migrated to deep storage.")) return;
+        try {
+            const r = await axios.post('super-admin/maintenance/archive');
+            showToast(r.data.message, "success");
+            fetchData();
+        } catch (err) { showToast("Archival Handshake Failed", "error"); }
+    };
 
     const handleReply = async (e) => {
         e.preventDefault();
@@ -236,12 +243,8 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
             </div>
 
             <div className="flex gap-4">
-                <button 
-                    onClick={handleArchival}
-                    className="px-6 py-2 bg-amber-500/10 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-amber-500 hover:bg-amber-500 hover:text-black transition-all"
-                >
-                    Archival Protocol
-                </button>
+
+
             </div>
 
             {loading ? (
@@ -275,16 +278,16 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                                     </div>
                                 </div>
                                 <div className="glass-panel p-6 border-violet-500/10 relative overflow-hidden flex flex-col justify-between">
-                                     <h3 className="italic font-black uppercase text-[11px] mb-6 flex items-center gap-2 text-violet-500">
+                                    <h3 className="italic font-black uppercase text-[11px] mb-6 flex items-center gap-2 text-violet-500">
                                         <Globe size={14} /> Spatial Radar
                                     </h3>
-                                    
+
                                     <div className="relative h-24 w-full bg-black/20 rounded-xl border border-white/5 overflow-hidden flex items-center justify-center">
                                         <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
                                         {stats?.heatmap?.length > 0 ? (
                                             <div className="relative w-full h-full">
                                                 {stats.heatmap.map((point, i) => (
-                                                    <motion.div 
+                                                    <motion.div
                                                         key={i}
                                                         style={{ left: `${(point.lng + 180) * (100 / 360)}%`, top: `${(90 - point.lat) * (100 / 180)}%` }}
                                                         animate={{ scale: [1, 2, 1], opacity: [0.5, 1, 0.5] }}
@@ -342,30 +345,30 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                                                     {company.status}
                                                 </span>
                                             </td>
-                                             <td className="text-right pr-8">
+                                            <td className="text-right pr-8">
                                                 <div className="flex justify-end gap-2">
-                                                    <button 
+                                                    <button
                                                         onClick={() => setOverrideCompany(company)}
                                                         className="p-2 hover:bg-white/5 text-amber-500 rounded-lg transition-colors"
                                                         title="Credential Override"
                                                     >
                                                         <Lock size={16} />
                                                     </button>
-                                                    <button 
+                                                    <button
                                                         onClick={() => setEditingCompany(company)}
                                                         className="p-2 hover:bg-white/5 text-violet-500 rounded-lg transition-colors"
                                                         title="Edit Entity"
                                                     >
                                                         <Edit3 size={16} />
                                                     </button>
-                                                    <button 
+                                                    <button
                                                         onClick={() => handleToggleStatus(company.id)}
                                                         className={`p-2 rounded-lg transition-colors ${company.status === 'ACTIVE' ? 'hover:bg-amber-500/10 text-amber-500' : 'hover:bg-emerald-500/10 text-emerald-500'}`}
                                                         title={company.status === 'ACTIVE' ? "Archive Node" : "Activate Node"}
                                                     >
                                                         {company.status === 'ACTIVE' ? <ShieldAlert size={16} /> : <Unlock size={16} />}
                                                     </button>
-                                                    <button 
+                                                    <button
                                                         onClick={() => setDeletingCompany(company)}
                                                         className="p-2 hover:bg-rose-500/10 text-rose-500 rounded-lg transition-colors"
                                                         title="Terminate Cluster"
@@ -393,7 +396,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                                     <p className="text-[10px] text-slate-500 italic line-clamp-2">{ticket.description}</p>
                                     <div className="pt-4 border-t border-white/5 flex justify-between items-center">
                                         <span className="text-[9px] font-black text-slate-600 uppercase tracking-tighter">{ticket.company?.name || 'Unknown'}</span>
-                                        <button 
+                                        <button
                                             onClick={() => setSelectedTicket(ticket)}
                                             className="text-[10px] font-black uppercase text-rose-500 italic hover:underline"
                                         >
@@ -418,11 +421,10 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                                                     key={type}
                                                     type="button"
                                                     onClick={() => setBroadcastForm({ ...broadcastForm, type })}
-                                                    className={`flex-1 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${
-                                                        broadcastForm.type === type 
-                                                        ? 'bg-violet-600 text-white shadow-lg' 
-                                                        : 'bg-white/5 text-slate-500 border border-white/5 hover:border-white/10'
-                                                    }`}
+                                                    className={`flex-1 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${broadcastForm.type === type
+                                                            ? 'bg-violet-600 text-white shadow-lg'
+                                                            : 'bg-white/5 text-slate-500 border border-white/5 hover:border-white/10'
+                                                        }`}
                                                 >
                                                     {type}
                                                 </button>
@@ -431,7 +433,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Message Payload</label>
-                                        <textarea 
+                                        <textarea
                                             value={broadcastForm.message}
                                             onChange={(e) => setBroadcastForm({ ...broadcastForm, message: e.target.value })}
                                             className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white text-xs font-bold outline-none focus:border-violet-500/50 min-h-[120px]"
@@ -439,7 +441,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                                             required
                                         />
                                     </div>
-                                    <button 
+                                    <button
                                         type="submit"
                                         disabled={isSaving}
                                         className="w-full bg-violet-600 hover:bg-violet-500 py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] italic text-white transition-all flex items-center justify-center gap-2"
@@ -450,12 +452,11 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                             </div>
                             <div className="space-y-4 overflow-y-auto max-h-[600px] pr-2 custom-scrollbar">
                                 {broadcasts.map(b => (
-                                    <div key={b.id} className={`glass-panel p-6 border-l-4 transition-all ${b.active ? 'opacity-100' : 'opacity-40'} ${
-                                        b.type === 'CRITICAL' ? 'border-l-rose-500' : b.type === 'WARNING' ? 'border-l-amber-500' : 'border-l-blue-500'
-                                    }`}>
+                                    <div key={b.id} className={`glass-panel p-6 border-l-4 transition-all ${b.active ? 'opacity-100' : 'opacity-40'} ${b.type === 'CRITICAL' ? 'border-l-rose-500' : b.type === 'WARNING' ? 'border-l-amber-500' : 'border-l-blue-500'
+                                        }`}>
                                         <div className="flex justify-between items-start mb-2">
                                             <span className="text-[9px] font-mono text-slate-600">{new Date(b.createdAt).toLocaleString()}</span>
-                                            <button 
+                                            <button
                                                 onClick={() => handleToggleBroadcast(b.id)}
                                                 className={`text-[9px] font-black uppercase tracking-widest italic ${b.active ? 'text-rose-500' : 'text-emerald-500'}`}
                                             >
@@ -477,13 +478,13 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
             {editingCompany && (
                 <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
                     <div className="glass-panel max-w-md w-full p-8 border-violet-500/20 relative animate-in zoom-in duration-300">
-                        <button 
+                        <button
                             onClick={() => setEditingCompany(null)}
                             className="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors"
                         >
                             <X size={20} />
                         </button>
-                        
+
                         <div className="mb-8">
                             <h3 className="italic font-black text-2xl uppercase tracking-tighter text-white mb-2">Modify Entity</h3>
                             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Company Registry ID: {editingCompany.id}</p>
@@ -492,8 +493,8 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                         <form onSubmit={handleUpdate} className="space-y-6">
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Entity Name</label>
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     value={editingCompany.name}
                                     onChange={(e) => setEditingCompany({ ...editingCompany, name: e.target.value })}
                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white font-bold tracking-tight focus:border-violet-500/50 outline-none transition-all"
@@ -502,7 +503,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                                 />
                             </div>
 
-                            <button 
+                            <button
                                 type="submit"
                                 disabled={isSaving}
                                 className="w-full bg-violet-600 hover:bg-violet-500 py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] italic text-white transition-all flex items-center justify-center gap-2"
@@ -522,7 +523,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                             <div className="w-16 h-16 bg-rose-500/10 rounded-full flex items-center justify-center text-rose-500">
                                 <AlertTriangle size={32} />
                             </div>
-                            
+
                             <div className="space-y-2">
                                 <h3 className="italic font-black text-2xl uppercase tracking-tighter text-white">Critical Command</h3>
                                 <p className="text-[10px] font-bold text-slate-500 leading-relaxed uppercase tracking-wider">
@@ -532,13 +533,13 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                             </div>
 
                             <div className="flex gap-4 w-full pt-4">
-                                <button 
+                                <button
                                     onClick={() => setDeletingCompany(null)}
                                     className="flex-1 bg-white/5 hover:bg-white/10 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 transition-all italic"
                                 >
                                     Abort
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => handleDelete(deletingCompany.id)}
                                     disabled={isSaving}
                                     className="flex-1 bg-rose-600 hover:bg-rose-500 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-white transition-all italic flex items-center justify-center gap-2"
@@ -555,13 +556,13 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
             {overrideCompany && (
                 <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
                     <div className="glass-panel max-w-md w-full p-8 border-amber-500/20 relative animate-in zoom-in duration-300">
-                        <button 
+                        <button
                             onClick={() => setOverrideCompany(null)}
                             className="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors"
                         >
                             <X size={20} />
                         </button>
-                        
+
                         <div className="mb-8 text-center">
                             <h3 className="italic font-black text-2xl uppercase tracking-tighter text-white mb-2">Master Override</h3>
                             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-relaxed">
@@ -573,8 +574,8 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                         <form onSubmit={handlePasswordOverride} className="space-y-6">
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Master-Force New Password</label>
-                                <input 
-                                    type="password" 
+                                <input
+                                    type="password"
                                     value={newPass}
                                     onChange={(e) => setNewPass(e.target.value)}
                                     className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white font-bold tracking-[0.3em] focus:border-amber-500/50 outline-none transition-all"
@@ -584,7 +585,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                                 />
                             </div>
 
-                            <button 
+                            <button
                                 type="submit"
                                 disabled={isSaving}
                                 className="w-full bg-amber-600 hover:bg-amber-500 py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] italic text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-900/20"
@@ -600,7 +601,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
             <AnimatePresence>
                 {selectedTicket && (
                     <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[1000] flex items-center justify-center p-8">
-                        <motion.div 
+                        <motion.div
                             initial={{ scale: 0.95, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.95, opacity: 0 }}
@@ -640,14 +641,14 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                             </div>
 
                             <form onSubmit={handleReply} className="pt-6 border-t border-white/5 space-y-4">
-                                <textarea 
+                                <textarea
                                     value={replyText}
                                     onChange={(e) => setReplyText(e.target.value)}
                                     placeholder="Transmit response to cluster admin..."
                                     className="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-white text-xs font-bold outline-none focus:border-indigo-500/50 min-h-[100px]"
                                     required
                                 />
-                                <button 
+                                <button
                                     type="submit"
                                     disabled={isSaving}
                                     className="w-full bg-indigo-600 hover:bg-indigo-500 py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] italic text-white transition-all flex items-center justify-center gap-2"
@@ -667,7 +668,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity translate-x-10 -translate-y-10">
                             <ShieldCheck size={300} />
                         </div>
-                        
+
                         <div className="relative z-10 text-left">
                             <h3 className="text-3xl font-black text-white italic uppercase mb-2 flex items-center gap-4">
                                 <Lock className="text-rose-500" size={32} />
@@ -679,8 +680,8 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
                                     <div className="space-y-3">
                                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">Identity Subject (Name)</label>
-                                        <input 
-                                            type="text" 
+                                        <input
+                                            type="text"
                                             value={profileForm.name}
                                             onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
                                             className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-5 text-[14px] font-bold text-white focus:border-rose-500 outline-none transition-all placeholder:text-slate-800"
@@ -690,8 +691,8 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                                     </div>
                                     <div className="space-y-3">
                                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">Corporate Signal (Email)</label>
-                                        <input 
-                                            type="email" 
+                                        <input
+                                            type="email"
                                             value={profileForm.email}
                                             onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
                                             className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-5 text-[14px] font-bold text-white focus:border-rose-500 outline-none transition-all placeholder:text-slate-800"
@@ -706,8 +707,8 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                                         <label className="text-[10px] font-black text-rose-500 uppercase tracking-[0.2em]">Master Credentials (Security Cipher)</label>
                                         <span className="text-[9px] font-bold text-slate-600 uppercase tracking-widest italic">Encrypted Transmission</span>
                                     </div>
-                                    <input 
-                                        type="password" 
+                                    <input
+                                        type="password"
                                         value={profileForm.password}
                                         onChange={(e) => setProfileForm({ ...profileForm, password: e.target.value })}
                                         className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-5 text-[14px] font-bold text-white focus:border-rose-500 outline-none transition-all placeholder:text-slate-800"
@@ -721,7 +722,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                                         <Activity size={16} />
                                         <span className="text-[9px] font-bold uppercase tracking-widest">Master Control Ready</span>
                                     </div>
-                                    <button 
+                                    <button
                                         type="submit"
                                         disabled={isSaving}
                                         className="px-12 py-5 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white transition-all font-black text-[12px] uppercase tracking-[0.2em] italic shadow-[0_0_30px_rgba(225,29,72,0.3)] disabled:opacity-50"

@@ -40,7 +40,7 @@ const TermsView = ({ onBack }) => {
                                 <h2 className="text-2xl font-black italic uppercase tracking-tight">2. Accuracy of Data</h2>
                             </div>
                             <p className="text-lg leading-relaxed text-slate-600 font-medium">
-                                While we strive for 100% spatial accuracy, environmental factors (GPS interference, network lag) may occasionally affect results. TwishhSync is a tracking aid, and administrators are encouraged to review audit logs before finalizing payroll.
+                                While we strive for 100% spatial accuracy, environmental factors (GPS interference, network lag) may occasionally affect results. TwishhSync is a tracking aid, and administrators are encouraged to review attendance records and variance reports before finalizing payroll.
                             </p>
                         </section>
 
@@ -50,7 +50,7 @@ const TermsView = ({ onBack }) => {
                                 <h2 className="text-2xl font-black italic uppercase tracking-tight">3. User Responsibility</h2>
                             </div>
                             <p className="text-lg leading-relaxed text-slate-600 font-medium">
-                                Administrators are responsible for the security of their workspace and the accurate onboarding of personnel. Employees are responsible for providing authentic location data during check-in events.
+                                Administrators are responsible for the security of their workspace and the accurate onboarding of personnel. By using the platform, users consent to receive administrative broadcasts and holiday notices posted by their company administrators. Employees are responsible for providing authentic location data during check-in events.
                             </p>
                         </section>
 
