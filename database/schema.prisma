@@ -85,7 +85,6 @@ model Attendance {
   checkOutAccuracy Float?
   checkInIp       String?
   status          String   @default("PRESENT") // PRESENT, LATE, ABSENT
-  verified        Boolean  @default(false)     // For AI verification
   photoUrl        String?
   notes           String?
   isAutoCheckout  Boolean  @default(false)
@@ -170,15 +169,4 @@ model CompanyNotice {
   createdAt     DateTime @default(now())
 }
 
-model ArchivedAttendance {
-  id               String    @id @default(uuid())
-  companyId        String
-  userId           String
-  checkIn          DateTime
-  checkOut         DateTime?
-  checkInLocation  String?
-  checkOutLocation String?
-  status           String
-  notes            String?
-  archivedAt       DateTime  @default(now())
-}
+

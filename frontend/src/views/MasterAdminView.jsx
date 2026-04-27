@@ -164,14 +164,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
         } finally { setIsSaving(false); }
     };
 
-    const handleArchival = async () => {
-        if (!window.confirm("EXECUTE ARCHIVAL PROTOCOL? Records older than 1 year will be migrated to deep storage.")) return;
-        try {
-            const r = await axios.post('super-admin/maintenance/archive');
-            showToast(r.data.message, "success");
-            fetchData();
-        } catch (err) { showToast("Archival Handshake Failed", "error"); }
-    };
+
 
     const handleReply = async (e) => {
         e.preventDefault();
@@ -244,12 +237,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
 
             <div className="flex gap-4">
 
-                <button 
-                    onClick={handleArchival}
-                    className="px-6 py-2 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[10px] font-black uppercase tracking-widest text-amber-500 hover:bg-amber-500 hover:text-black transition-all"
-                >
-                    Archival Protocol
-                </button>
+
             </div>
 
             {loading ? (
