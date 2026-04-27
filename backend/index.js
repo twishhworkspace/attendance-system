@@ -8,6 +8,9 @@ const prisma = require('./db');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust the first proxy (Render load balancer)
+app.set('trust proxy', 1);
+
 // --- CRITICAL SECURITY MIDDLEWARE ORDER ---
 
 // 1. CORS - MUST BE FIRST
