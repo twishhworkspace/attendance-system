@@ -10,8 +10,14 @@ const { logAction } = require('../utils/logger');
 
 // The RP (Relying Party) is your website
 const rpName = 'TwishhSync Advanced Systems';
-const rpID = process.env.RP_ID || 'localhost'; // Should be your domain in production
-const origin = process.env.ORIGIN || `http://${rpID}:5173`;
+
+// PRODUCTION READY: Set these in your Render environment variables
+// Based on your provided URLs:
+const rpID = process.env.RP_ID || 'attendance-system-gamma-ecru.vercel.app'; 
+const origin = process.env.ORIGIN || 'https://attendance-system-gamma-ecru.vercel.app';
+
+console.log(`[PASSKEY_CONFIG] Active RP_ID: ${rpID}`);
+console.log(`[PASSKEY_CONFIG] Active ORIGIN: ${origin}`);
 
 // --- Registration (Enrolment) ---
 
@@ -63,6 +69,8 @@ const verifyReg = async (req, res) => {
             expectedOrigin: origin,
             expectedRPID: rpID,
         });
+
+        console.log(`[BIOMETRIC_DEBUG] Verification Result:`, verification.verified);
 
         if (verification.verified) {
             const { registrationInfo } = verification;
@@ -157,6 +165,8 @@ const verifyAuth = async (req, res) => {
                 counter: dbAuthenticator.counter,
             },
         });
+
+        console.log(`[BIOMETRIC_DEBUG] Auth Result:`, verification.verified);
 
         if (verification.verified) {
             // Update counter to prevent replay attacks
