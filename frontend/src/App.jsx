@@ -154,7 +154,7 @@ const AppContent = () => {
                             {view === 'spatial-intel' && <SpatialIntelView />}
                             {view === 'requests' && <RequestsView />}
                             {view === 'support' && <CompanySupportView />}
-                            {view === 'terminal' && <PunchTerminal />}
+                            {view === 'terminal' && <PunchTerminal setView={setView} />}
                             {view === 'settings' && <SettingsView />}
                         </motion.div>
                     </AnimatePresence>

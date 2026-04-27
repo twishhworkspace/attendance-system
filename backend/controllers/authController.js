@@ -7,7 +7,8 @@ const crypto = require('crypto');
 const prisma = require('../db');
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const email = req.body.email?.trim().toLowerCase();
+  const password = req.body.password?.trim();
 
   // Basic Input Validation
   if (!email || !password) {
@@ -119,7 +120,7 @@ const getProfile = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
-      select: { id: true, name: true, email: true, role: true, sector: true, companyId: true, company: true, forgotCheckoutCount: true }
+      select: { id: true, name: true, email: true, role: true, sector: true, companyId: true, company: true, forgotCheckoutCount: true, authenticators: true }
     });
     res.json(user);
   } catch (err) {
@@ -247,7 +248,8 @@ const registerCompany = async (req, res) => {
 };
 
 const verifyOTP = async (req, res) => {
-    const { email, otp, deviceId } = req.body;
+    const email = req.body.email?.trim().toLowerCase();
+    const { otp, deviceId } = req.body;
 
     // Allow empty string for deviceId but ensure it's provided in the request
     if (!email || !otp || deviceId === undefined) {
