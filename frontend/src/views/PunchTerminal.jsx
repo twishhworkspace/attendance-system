@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axios';
 import { 
-    History, MapPin, Loader2, Fingerprint, LogOut, Navigation, X 
+    History, MapPin, Loader2, Fingerprint, LogOut, Navigation, X, Bell, Info, Calendar
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -22,6 +22,7 @@ const PunchTerminal = ({ setView }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [spatialStatus, setSpatialStatus] = useState(null); // null, 'verifying', 'verified', 'out', 'network-error'
     const [isOnline, setIsOnline] = useState(navigator.onLine);
+    const [notices, setNotices] = useState([]);
 
     useOfflineSync(); // This will handle background syncing of queue
 
@@ -49,7 +50,17 @@ const PunchTerminal = ({ setView }) => {
         finally { setLoading(false); setRefreshing(false); } 
     };
 
-    useEffect(() => { fetchS(); }, []);
+    const fetchNotices = async () => {
+        try {
+            const r = await axios.get('attendance/notices');
+            setNotices(r.data);
+        } catch (err) { console.error('Notice sync error'); }
+    };
+
+    useEffect(() => { 
+        fetchS(); 
+        fetchNotices();
+    }, []);
 
     const handleOutRequest = async (e) => {
         e.preventDefault();
@@ -167,6 +178,30 @@ const PunchTerminal = ({ setView }) => {
                 <h3 className="italic font-black text-2xl lg:text-4xl mb-2 tracking-tighter uppercase text-center">
                     {loading ? <Skeleton width={200} height={40} className="mb-4" /> : (spatialStatus === 'verified' ? (active || isApprovedOut ? 'Authorized' : 'Verified') : (spatialStatus === 'out' ? 'Out-of-Location' : 'Disconnected'))}
                 </h3>
+                
+                {/* Notice Board */}
+                {notices.length > 0 && (
+                    <div className="flex flex-col gap-4 mb-8 w-full max-w-lg">
+                        {notices.map(notice => (
+                            <div key={notice.id} className={`p-4 rounded-xl border flex items-center gap-4 ${
+                                notice.type === 'HOLIDAY' 
+                                ? 'bg-emerald-500/10 border-emerald-500/20' 
+                                : 'bg-violet-600/10 border-violet-500/20'
+                            }`}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                                    notice.type === 'HOLIDAY' ? 'bg-emerald-500/20 text-emerald-500' : 'bg-violet-500/20 text-violet-500'
+                                }`}>
+                                    {notice.type === 'HOLIDAY' ? <Calendar size={14} /> : <Bell size={14} />}
+                                </div>
+                                <div className="flex-1">
+                                    <h4 className="italic font-black uppercase text-[10px] text-white">{notice.title}</h4>
+                                    <p className="text-[9px] font-bold text-slate-400 italic">{notice.message}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
                 <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.4em] mb-12">
                    {loading ? <Skeleton width={120} height={10} /> : `Connection Status: ${spatialStatus === 'verified' ? 'CONNECTED' : (spatialStatus === 'out' ? 'LOCATION ERROR' : spatialStatus === 'network-error' ? 'NO NETWORK' : 'CONNECTING...')}`}
                 </p>

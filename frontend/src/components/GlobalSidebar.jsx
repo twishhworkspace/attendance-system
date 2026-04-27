@@ -28,7 +28,6 @@ const GlobalSidebar = ({ user, view, setView, onLogout, isOpen, setIsOpen }) => 
         { id: 'master-companies', label: 'Manage Companies', icon: Building },
         { id: 'support-hub', label: 'Support Center', icon: MessageSquare },
         { id: 'broadcasts', label: 'Send Alerts', icon: Radio },
-        { id: 'audit-logs', label: 'Security Logs', icon: Terminal },
         { id: 'master-profile', label: 'My Profile', icon: ShieldCheck },
     ] : isAdmin ? [
         { id: 'dashboard', label: 'Main Dashboard', icon: LayoutDashboard },
@@ -38,8 +37,8 @@ const GlobalSidebar = ({ user, view, setView, onLogout, isOpen, setIsOpen }) => 
         { id: 'reports', label: 'Attendance Logs', icon: FileText },
         { id: 'spatial-intel', label: 'Live Location Map', icon: Map },
         { id: 'requests', label: 'Pending Approvals', icon: ShieldCheck },
+        { id: 'notices', label: 'Broadcast Board', icon: Radio },
         { id: 'support', label: 'Get Support', icon: MessageSquare },
-        { id: 'audit-logs', label: 'Security Logs', icon: Terminal },
         { id: 'settings', label: 'System Settings', icon: Settings },
     ] : [
         { id: 'terminal', label: 'Mark Attendance', icon: ShieldCheck },

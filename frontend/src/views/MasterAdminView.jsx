@@ -25,7 +25,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
     const [companies, setCompanies] = useState([]);
     const [tickets, setTickets] = useState([]);
     const [broadcasts, setBroadcasts] = useState([]);
-    const [auditLogs, setAuditLogs] = useState([]);
+    const [broadcasts, setBroadcasts] = useState([]);
     const [loading, setLoading] = useState(true);
     
     // Management State
@@ -65,18 +65,16 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [statsRes, compRes, ticketRes, broadcastRes, logsRes] = await Promise.all([
+            const [statsRes, compRes, ticketRes, broadcastRes] = await Promise.all([
                 axios.get('super-admin/stats'),
                 axios.get('super-admin/companies'),
                 axios.get('super-admin/tickets'),
-                axios.get('super-admin/broadcasts'),
-                axios.get('super-admin/logs')
+                axios.get('super-admin/broadcasts')
             ]);
             setStats(statsRes.data);
             setCompanies(compRes.data);
             setTickets(ticketRes.data);
             setBroadcasts(broadcastRes.data);
-            setAuditLogs(logsRes.data);
         } catch (err) {
             console.error('Master control sync failure:', err);
         } finally {
@@ -246,12 +244,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
             </div>
 
             <div className="flex gap-4">
-                <button 
-                    onClick={() => setShowAudit(true)}
-                    className="px-6 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white hover:bg-white/10 transition-all"
-                >
-                    System Audit
-                </button>
+
                 <button 
                     onClick={handleArchival}
                     className="px-6 py-2 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[10px] font-black uppercase tracking-widest text-amber-500 hover:bg-amber-500 hover:text-black transition-all"
@@ -485,23 +478,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                         </div>
                     )}
 
-                    {activeView === 'alerts' && (
-                        <div className="glass-panel overflow-hidden">
-                            <div className="p-6 border-b border-white/5 flex justify-between items-center bg-white/2">
-                                <h4 className="text-[10px] font-black text-white uppercase tracking-[0.2em] italic">Telemetry Audit Logs</h4>
-                                <span className="text-[8px] font-black text-slate-500 uppercase">Live Stream Active</span>
-                            </div>
-                            <div className="p-4 space-y-2 max-h-[600px] overflow-y-auto font-mono text-[10px]">
-                                {auditLogs.map(log => (
-                                    <div key={log.id} className="flex gap-4 p-2 hover:bg-white/5 rounded border border-transparent hover:border-white/5 transition-all">
-                                        <span className="text-slate-600 shrink-0">[{new Date(log.createdAt).toLocaleTimeString()}]</span>
-                                        <span className="text-violet-500 font-bold uppercase shrink-0 w-20">{log.action}</span>
-                                        <span className="text-slate-400 italic truncate">{log.details}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+
                 </div>
             )}
 
@@ -767,58 +744,7 @@ const MasterAdminView = ({ currentView, setGlobalView }) => {
                 </div>
             )}
 
-            {/* Audit Logs Modal */}
-            <AnimatePresence>
-                {showAudit && (
-                    <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[1000] flex items-center justify-center p-8">
-                        <motion.div 
-                            initial={{ scale: 0.95, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.95, opacity: 0 }}
-                            className="glass-panel max-w-5xl w-full h-[80vh] flex flex-col p-8 border-rose-500/20"
-                        >
-                            <div className="flex justify-between items-start mb-8">
-                                <div>
-                                    <h3 className="italic font-black text-3xl uppercase tracking-tighter text-white mb-2">Platform Audit</h3>
-                                    <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.4em]">Direct Telemetry Stream | Live Logs</p>
-                                </div>
-                                <button onClick={() => setShowAudit(false)} className="p-2 hover:bg-white/5 rounded-full transition-colors"><X size={24} /></button>
-                            </div>
 
-                            <div className="flex-1 overflow-y-auto custom-scrollbar pr-4">
-                                <table className="w-full text-left">
-                                    <thead className="sticky top-0 bg-slate-900/50 backdrop-blur-md z-10 border-b border-white/5">
-                                        <tr>
-                                            <th className="p-4 text-[9px] font-black uppercase text-slate-500 tracking-widest">Signal</th>
-                                            <th className="p-4 text-[9px] font-black uppercase text-slate-500 tracking-widest">Details</th>
-                                            <th className="p-4 text-[9px] font-black uppercase text-slate-500 tracking-widest">Origin</th>
-                                            <th className="p-4 text-[9px] font-black uppercase text-slate-500 tracking-widest text-right">Timestamp</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-white/5">
-                                        {auditLogs.map((log, i) => (
-                                            <tr key={i} className="hover:bg-white/2 transition-colors">
-                                                <td className="p-4">
-                                                    <span className="text-[10px] font-black text-rose-500 uppercase italic">{log.action}</span>
-                                                </td>
-                                                <td className="p-4">
-                                                    <p className="text-[10px] font-bold text-slate-300 max-w-sm truncate italic">{log.details}</p>
-                                                </td>
-                                                <td className="p-4">
-                                                    <span className="text-[9px] font-mono font-bold text-slate-700">{log.ip || '0.0.0.0'}</span>
-                                                </td>
-                                                <td className="p-4 text-right">
-                                                    <span className="text-[9px] font-mono font-bold text-slate-500">{new Date(log.createdAt).toLocaleString()}</span>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
         </div>
     );
 };

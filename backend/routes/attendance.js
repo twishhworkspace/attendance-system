@@ -10,5 +10,6 @@ router.post('/check-in', authenticateToken, dataSubmissionLimiter, validate(chec
 router.post('/check-out', authenticateToken, dataSubmissionLimiter, validate(checkOutSchema), checkOut);
 router.post('/verify', authenticateToken, verifyLocation);
 router.get('/status', authenticateToken, getStatus);
+router.get('/notices', authenticateToken, require('../controllers/noticeController').getNotices);
 
 module.exports = router;

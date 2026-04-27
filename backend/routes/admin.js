@@ -15,20 +15,20 @@ const {
   getCompanyTickets,
   getSpatialDensity,
   resetStrikes,
-  resetEmployeePassword,
-  getAuditLogs
+  resetEmployeePassword
 } = require('../controllers/adminController');
 const { getPendingRequests, processRequest } = require('../controllers/outLocationController');
 const { getOffices, addOffice, deleteOffice, updateOffice } = require('../controllers/officeController');
 const { adminActionLimiter } = require('../middleware/rateLimiters');
 const { authenticateToken, authorizeRoles } = require('../middleware/auth');
 
+const { getNotices, createNotice, deleteNotice } = require('../controllers/noticeController');
+
 // All admin routes are protected by JWT and role authorization
 router.use(authenticateToken);
 router.use(authorizeRoles('ADMIN', 'COMPANY_ADMIN', 'SUPER_ADMIN'));
 router.use(adminActionLimiter);
 
-router.get('/audit-logs', getAuditLogs);
 router.get('/summary', getAttendanceSummary);
 router.get('/logs', getAllAttendance);
 router.post('/employees', addEmployee);
@@ -54,5 +54,10 @@ router.put('/company', updateCompany);
 router.post('/tickets', createTicket);
 router.get('/tickets', getCompanyTickets);
 router.get('/spatial-density', getSpatialDensity);
+
+// Notice & Holiday Management
+router.get('/notices', getNotices);
+router.post('/notices', createNotice);
+router.delete('/notices/:id', deleteNotice);
 
 module.exports = router;

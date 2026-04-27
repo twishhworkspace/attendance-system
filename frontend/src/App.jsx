@@ -26,7 +26,7 @@ import SettingsView from './views/SettingsView';
 import PunchTerminal from './views/PunchTerminal';
 import CompanySupportView from './views/CompanySupportView';
 import SpatialIntelView from './views/SpatialIntelView';
-import AuditLogsView from './views/AuditLogsView';
+import NoticesView from './views/NoticesView';
 
 import MasterAdminView from './views/MasterAdminView';
 
@@ -157,7 +157,7 @@ const AppContent = () => {
                             {view === 'support' && <CompanySupportView />}
                             {view === 'terminal' && <PunchTerminal setView={setView} />}
                             {view === 'settings' && <SettingsView />}
-                            {view === 'audit-logs' && <AuditLogsView />}
+                            {view === 'notices' && <NoticesView />}
                         </motion.div>
                     </AnimatePresence>
                 </main>
