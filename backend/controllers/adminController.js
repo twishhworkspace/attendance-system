@@ -99,7 +99,7 @@ const getAllAttendance = async (req, res) => {
 };
 
 const addEmployee = async (req, res) => {
-  const { name, email, password, sectorId } = req.body;
+  const { name, email, password, sectorId, mobileNumber } = req.body;
   const companyId = req.user.companyId;
 
   try {
@@ -113,6 +113,7 @@ const addEmployee = async (req, res) => {
       data: {
         name: xss(name),
         email: xss(email),
+        mobileNumber: mobileNumber ? xss(mobileNumber) : null,
         password: hashedPassword,
         role: 'EMPLOYEE',
         companyId,
@@ -140,7 +141,7 @@ const addEmployee = async (req, res) => {
 
 const updateEmployee = async (req, res) => {
   const { id } = req.params;
-  const { name, email, sectorId } = req.body;
+  const { name, email, sectorId, mobileNumber } = req.body;
 
   try {
     const updated = await prisma.user.update({
@@ -148,6 +149,7 @@ const updateEmployee = async (req, res) => {
       data: { 
         name: name ? xss(name) : undefined, 
         email: email ? xss(email) : undefined, 
+        mobileNumber: mobileNumber ? xss(mobileNumber) : undefined,
         sectorId: sectorId || null 
       }
     });
@@ -210,7 +212,7 @@ const getEmployees = async (req, res) => {
   try {
     const employees = await prisma.user.findMany({
       where: { companyId: req.user.companyId, role: 'EMPLOYEE' },
-      select: { id: true, name: true, email: true, createdAt: true, forgotCheckoutCount: true, sector: { select: { name: true } }, sectorId: true }
+      select: { id: true, name: true, email: true, mobileNumber: true, createdAt: true, forgotCheckoutCount: true, sector: { select: { name: true } }, sectorId: true }
     });
     res.json(employees);
   } catch (err) {

@@ -140,10 +140,11 @@ const LoginView = ({ onBack, biometricEmail, setBiometricEmail, isStandalone }) 
 
                     <form onSubmit={handleLogin} className="space-y-8 text-left">
                         <div>
-                            <label className="label-proto">Email</label>
+                            <label className="label-proto">Email / Mobile Number</label>
                             <input 
                                 name="e" 
-                                type="email" 
+                                type="text" 
+                                placeholder="name@company.com or 9876543210"
                                 value={email} 
                                 onChange={(e) => setEmail(e.target.value)}
                                 required 

@@ -11,17 +11,17 @@ const login = async (req, res) => {
 
   // Basic Input Validation
   if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required' });
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ error: 'Invalid email format' });
+    return res.status(400).json({ error: 'Email/Mobile and password are required' });
   }
 
   try {
-    const user = await prisma.user.findUnique({ 
-        where: { email },
+    const user = await prisma.user.findFirst({ 
+        where: {
+            OR: [
+                { email: email },
+                { mobileNumber: email } // 'email' variable now acts as a general 'identifier'
+            ]
+        },
         include: { company: true }
     });
     if (!user) return res.status(401).json({ error: 'Invalid credentials' });
@@ -38,6 +38,20 @@ const login = async (req, res) => {
     // Device Verification Logic: Only enforce for EMPLOYEES
     if (user.role === 'EMPLOYEE' && process.env.SECURITY_DISABLED !== 'true') {
         if (user.deviceId && user.deviceId !== clientDeviceId) {
+            // Rate Limiting: 2-minute cooldown between OTP generations
+            if (user.otpExpiry) {
+                const generatedAt = new Date(user.otpExpiry.getTime() - 10 * 60 * 1000);
+                const cooldownEnd = new Date(generatedAt.getTime() + 2 * 60 * 1000);
+                const now = new Date();
+                
+                if (now < cooldownEnd) {
+                    const secondsLeft = Math.ceil((cooldownEnd - now) / 1000);
+                    return res.status(429).json({ 
+                        error: `Security Protocol: Please wait ${secondsLeft} seconds before requesting a new code.` 
+                    });
+                }
+            }
+
             // New Device Detected - Generate OTP
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
             const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 Minutes
@@ -235,13 +249,19 @@ const registerCompany = async (req, res) => {
 const verifyOTP = async (req, res) => {
     const { email, otp, deviceId } = req.body;
 
-    if (!email || !otp || !deviceId) {
+    // Allow empty string for deviceId but ensure it's provided in the request
+    if (!email || !otp || deviceId === undefined) {
         return res.status(400).json({ error: 'Verification data incomplete' });
     }
 
     try {
-        const user = await prisma.user.findUnique({ 
-            where: { email },
+        const user = await prisma.user.findFirst({ 
+            where: {
+                OR: [
+                    { email: email },
+                    { mobileNumber: email }
+                ]
+            },
             include: { company: true }
         });
         if (!user) return res.status(401).json({ error: 'Invalid session' });
@@ -250,20 +270,26 @@ const verifyOTP = async (req, res) => {
             return res.status(403).json({ error: 'Your company access has been suspended by the platform administrator.' });
         }
 
-        // Robust OTP matching (handles type mismatches and whitespace)
-        const storedOtp = user.otpCode?.toString().trim();
-        const inputOtp = otp?.toString().trim();
+        // Robust OTP matching (handles type mismatches, formatting, and whitespace)
+        // Strips ALL non-digit characters to ensure 123 456 matches 123456
+        const storedOtp = user.otpCode?.toString().replace(/\D/g, '');
+        const inputOtp = otp?.toString().replace(/\D/g, '');
 
-        console.log(`[SECURITY_DEBUG] OTP Match Attempt for ${email}:`);
-        console.log(`  - Stored: [${storedOtp}]`);
-        console.log(`  - Input:  [${inputOtp}]`);
+        const now = new Date();
+        
+        console.log(`[OTP_FORENSICS] Attempt for ${email}:`);
+        console.log(`  - Input OTP:  [${inputOtp}]`);
+        console.log(`  - Stored OTP: [${storedOtp}]`);
+        console.log(`  - Current Time: ${now.toISOString()}`);
+        console.log(`  - OTP Expiry:   ${user.otpExpiry?.toISOString()}`);
+        console.log(`  - Match Status: ${storedOtp === inputOtp ? 'SUCCESS' : 'FAILURE'}`);
+        console.log(`  - Expiry Status: ${now > user.otpExpiry ? 'EXPIRED' : 'VALID'}`);
 
         if (!storedOtp || storedOtp !== inputOtp) {
-            console.log(`[SECURITY_DEBUG] Match Failed: Codes do not match.`);
             return res.status(401).json({ error: 'Invalid verification code' });
         }
 
-        if (new Date() > user.otpExpiry) {
+        if (now > user.otpExpiry) {
             return res.status(401).json({ error: 'Verification code expired' });
         }
 

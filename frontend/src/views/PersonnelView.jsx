@@ -176,7 +176,15 @@ const PersonnelView = ({ onNavigateToReport, globalSearch }) => {
                                                 </div>
                                                 <div className="flex flex-col">
                                                     <span className="text-white font-bold italic tracking-tight group-hover/avatar:text-violet-400 transition-colors">{emp.name}</span>
-                                                    <span className="text-[9px] text-slate-600 font-black uppercase tracking-tighter">{emp.email}</span>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-[9px] text-slate-600 font-black uppercase tracking-tighter">{emp.email}</span>
+                                                        {emp.mobileNumber && (
+                                                            <>
+                                                                <span className="w-1 h-1 rounded-full bg-slate-800"></span>
+                                                                <span className="text-[9px] text-slate-600 font-black tracking-tighter">{emp.mobileNumber}</span>
+                                                            </>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
@@ -271,6 +279,9 @@ const PersonnelView = ({ onNavigateToReport, globalSearch }) => {
                                 <div><label className="label-proto">Full Name</label><input name="name" placeholder="John Doe" required autoComplete="off" /></div>
                                 <div><label className="label-proto">Email Protocol</label><input name="email" type="email" placeholder="john@company.com" required autoComplete="off" /></div>
                             </div>
+                            <div className="grid grid-cols-1 gap-6">
+                                <div><label className="label-proto">Mobile Number (Login Option)</label><input name="mobileNumber" placeholder="9876543210" autoComplete="off" /></div>
+                            </div>
                             <div><label className="label-proto">Temporary Password</label><input name="password" type="password" required /></div>
                             <div>
                                 <label className="label-proto">Deployment Sector</label>
@@ -296,6 +307,9 @@ const PersonnelView = ({ onNavigateToReport, globalSearch }) => {
                             <div className="grid grid-cols-2 gap-6">
                                 <div><label className="label-proto">Full Name</label><input name="name" defaultValue={editEmployee.name} required autoComplete="off" /></div>
                                 <div><label className="label-proto">Email Protocol</label><input name="email" defaultValue={editEmployee.email} required autoComplete="off" /></div>
+                            </div>
+                            <div className="grid grid-cols-1 gap-6">
+                                <div><label className="label-proto">Mobile Number</label><input name="mobileNumber" defaultValue={editEmployee.mobileNumber || ''} placeholder="9876543210" autoComplete="off" /></div>
                             </div>
                             <div>
                                 <label className="label-proto">Deployment Sector</label>
