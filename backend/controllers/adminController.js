@@ -356,9 +356,15 @@ const downloadAttendanceReport = async (req, res) => {
       return s;
     };
 
-    let csv = 'Employee,Email,Check In,Check Out,Status,Notes\n';
+    let csv = 'Employee,Email,Check In,Check Out,Status,Variance (Minutes),Notes\n';
     attendance.forEach(log => {
-      csv += `${escapeCsv(log.user.name)},${escapeCsv(log.user.email)},${escapeCsv(log.checkIn)},${escapeCsv(log.checkOut || '--')},${escapeCsv(log.status)},${escapeCsv(log.notes || '')}\n`;
+      let variance = '--';
+      if (log.checkIn && log.checkOut) {
+        const diffMs = new Date(log.checkOut) - new Date(log.checkIn);
+        variance = Math.round(diffMs / 60000); // Convert to minutes
+      }
+      
+      csv += `${escapeCsv(log.user.name)},${escapeCsv(log.user.email)},${escapeCsv(log.checkIn)},${escapeCsv(log.checkOut || '--')},${escapeCsv(log.status)},${variance},${escapeCsv(log.notes || '')}\n`;
     });
 
     res.setHeader('Content-Type', 'text/csv');
@@ -462,6 +468,20 @@ const getSpatialDensity = async (req, res) => {
   }
 };
 
+const getAuditLogs = async (req, res) => {
+  try {
+    const companyId = req.user.role === 'SUPER_ADMIN' ? undefined : req.user.companyId;
+    const logs = await prisma.auditLog.findMany({
+      where: companyId ? { companyId } : {},
+      orderBy: { createdAt: 'desc' },
+      take: 200 // Recent 200 logs
+    });
+    res.json(logs);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch audit trails.' });
+  }
+};
+
 module.exports = {
   getAttendanceSummary,
   getAllAttendance,
@@ -476,5 +496,6 @@ module.exports = {
   getCompanyTickets,
   getSpatialDensity,
   resetStrikes,
-  resetEmployeePassword
+  resetEmployeePassword,
+  getAuditLogs
 };
