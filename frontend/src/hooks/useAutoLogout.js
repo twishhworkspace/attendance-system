@@ -12,9 +12,6 @@ export const useAutoLogout = (timeoutMs = 60000) => {
         // Only apply to employees
         if (!user || user.role !== 'EMPLOYEE') return;
 
-        // Ensure we start fresh when mounted
-        lastActivityRef.current = Date.now();
-
         const checkInactivity = () => {
             if (Date.now() - lastActivityRef.current >= timeoutMs) {
                 logout();
