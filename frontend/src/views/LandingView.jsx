@@ -69,7 +69,7 @@ const LandingView = ({ onLogin, onSignup, onShowPrivacy, onShowTerms }) => {
                             if (isInstallable) {
                                 installPWA();
                             } else {
-                                showToast("System initializing. Please wait 5s or use 'Add to Home Screen'.", "info");
+                                setShowInstallGuide(true);
                             }
                         }}
                         className="bg-amber-100/50 text-[#103e7a] px-4 py-1.5 rounded-full font-black text-[10px] flex items-center gap-2 border border-amber-200 animate-pulse"
@@ -84,7 +84,7 @@ const LandingView = ({ onLogin, onSignup, onShowPrivacy, onShowTerms }) => {
                             if (isInstallable) {
                                 installPWA();
                             } else {
-                                showToast("System initializing. Please wait 5s or use 'Add to Home Screen'.", "info");
+                                setShowInstallGuide(true);
                             }
                         }}
                         className="bg-amber-100/50 text-[#103e7a] px-3 py-1 rounded-full font-black text-[9px] flex items-center gap-1 border border-amber-200"
@@ -153,7 +153,7 @@ const LandingView = ({ onLogin, onSignup, onShowPrivacy, onShowTerms }) => {
                                             if (isInstallable) {
                                                 installPWA();
                                             } else {
-                                                showToast("System initializing. Please wait 5s or use 'Add to Home Screen'.", "info");
+                                                setShowInstallGuide(true);
                                             }
                                         }}
                                         className="text-left text-2xl font-black text-[#eab308] uppercase italic tracking-tighter hover:text-amber-600 transition-colors flex items-center gap-3"
@@ -207,7 +207,7 @@ const LandingView = ({ onLogin, onSignup, onShowPrivacy, onShowTerms }) => {
                                 if (isInstallable) {
                                     installPWA();
                                 } else {
-                                    showToast("System initializing. If the prompt doesn't appear in 5s, please use 'Add to Home Screen' in your browser menu.", "info");
+                                    setShowInstallGuide(true);
                                 }
                             }}
                             className="bg-[#eab308] text-[#103e7a] px-8 py-3 rounded-2xl font-black text-[13px] flex items-center gap-3 shadow-2xl relative overflow-hidden group"
