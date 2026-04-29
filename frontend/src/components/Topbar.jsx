@@ -63,20 +63,20 @@ const Topbar = ({ user, view, setView, onToggleSidebar, globalSearch, setGlobalS
     return (
         <header className="h-20 border-b border-white/5 flex items-center justify-between px-4 md:px-8 relative z-20 bg-slate-950/50 backdrop-blur-md">
             {/* Left: Breadcrumbs & Search */}
-            <div className="flex items-center gap-4 md:gap-6">
+            <div className="flex items-center gap-2 md:gap-6">
                 <button 
                     onClick={onToggleSidebar}
                     className="lg:hidden p-2 text-slate-500 hover:text-white transition-colors"
                 >
                     <Menu size={20} />
                 </button>
-                <div className="flex items-center gap-2 text-slate-500 text-[10px] font-black uppercase tracking-widest">
+                <div className="hidden md:flex items-center gap-2 text-slate-500 text-[10px] font-black uppercase tracking-widest">
                     <span className="text-white italic">Twishh<span className="text-violet-500">Sync</span></span>
                     <ChevronRight size={10} />
                     <span className="text-white italic">{viewTitles[view] || 'Terminal'}</span>
                 </div>
                 
-                <div className="h-8 w-[1px] bg-white/5 mx-2" />
+                <div className="hidden md:block h-8 w-[1px] bg-white/5 mx-2" />
 
                 <div className="relative group">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 group-hover:text-violet-500 transition-colors" size={14} />
@@ -85,7 +85,7 @@ const Topbar = ({ user, view, setView, onToggleSidebar, globalSearch, setGlobalS
                         placeholder="Neural Search..." 
                         value={globalSearch || ''}
                         onChange={(e) => setGlobalSearch(e.target.value)}
-                        className="bg-white/5 border border-white/5 rounded-xl py-2 pl-10 pr-4 text-[10px] font-bold text-white outline-none focus:border-violet-500/30 transition-all w-32 md:w-64"
+                        className="bg-white/5 border border-white/5 rounded-xl py-2 pl-10 pr-4 text-[10px] font-bold text-white outline-none focus:border-violet-500/30 transition-all w-28 md:w-64"
                         autoComplete="off"
                     />
                     
@@ -132,9 +132,9 @@ const Topbar = ({ user, view, setView, onToggleSidebar, globalSearch, setGlobalS
             </div>
 
             {/* Right: Metrics & Identity */}
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 md:gap-6">
                 {/* Status Indicator */}
-                <div className="flex items-center gap-4 px-4 py-2 bg-white/5 rounded-2xl border border-white/5">
+                <div className="hidden sm:flex items-center gap-4 px-4 py-2 bg-white/5 rounded-2xl border border-white/5">
                     <div className="flex items-center gap-2">
                         {isOnline ? (
                             <Wifi size={14} className="text-emerald-500 animate-pulse" />

@@ -147,7 +147,7 @@ const DashboardView = () => {
                 </div>
 
                 {/* Allocation */}
-                <div className="glass-panel w-80 p-8 h-[400px] flex flex-col">
+                <div className="glass-panel w-full md:w-80 p-8 h-[400px] flex flex-col">
                     <h3 className="italic font-black text-xs uppercase mb-10">Personnel Allocation</h3>
                     <div className="flex-1 flex flex-col justify-center gap-8">
                         {analytics?.pieData?.map((d, i) => (

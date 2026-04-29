@@ -37,6 +37,7 @@ import ToastContainer from './components/Toast';
 
 // Hooks
 import { useOfflineSync } from './hooks/useOfflineSync';
+import { useAutoLogout } from './hooks/useAutoLogout';
 
 const AppContent = () => {
     const { user, login, signup, logout, loading } = useAuth();
@@ -52,6 +53,7 @@ const AppContent = () => {
     const [biometricEmail, setBiometricEmail] = useState(localStorage.getItem('twishh_last_email') || '');
 
     useOfflineSync(); 
+    useAutoLogout(600000); // 10 minutes inactivity timeout
 
     useEffect(() => {
         if (!user) {

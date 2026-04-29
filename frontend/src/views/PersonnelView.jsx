@@ -134,23 +134,23 @@ const PersonnelView = ({ onNavigateToReport, globalSearch }) => {
     return (
         <div className="flex-1 flex flex-col gap-8 animate-in fade-in duration-500">
             {/* Header / Stats Overlay */}
-            <div className="flex justify-between items-end mb-4">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-4">
                 <div>
-                    <h2 className="italic font-black text-4xl mb-2 flex items-center gap-4 uppercase tracking-tighter">
+                    <h2 className="italic font-black text-2xl md:text-4xl mb-2 flex flex-wrap items-center gap-2 md:gap-4 uppercase tracking-tighter">
                         Personnel Registry
-                        <div className="px-2 py-0.5 bg-violet-600 text-[10px] tracking-[0.3em] italic rounded">STABLE_LINK</div>
+                        <div className="px-2 py-0.5 bg-violet-600 text-[8px] md:text-[10px] tracking-[0.3em] italic rounded">STABLE_LINK</div>
                     </h2>
                     <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Managing {employees.length} Active System Nodes</p>
                 </div>
 
-                <div className="flex gap-4">
-                    <div className="flex items-center gap-3 px-4 py-2 bg-violet-600/10 border border-violet-500/20 rounded-2xl">
+                <div className="flex flex-wrap gap-4 w-full md:w-auto">
+                    <div className="flex-1 md:flex-none flex items-center gap-3 px-4 py-2 bg-violet-600/10 border border-violet-500/20 rounded-2xl">
                         <Search size={14} className="text-violet-500" />
                         <span className="text-[10px] font-black uppercase text-violet-400">Searching: {globalSearch || 'ALL'}</span>
                     </div>
                     <button 
                         onClick={() => setShowAddModal(true)}
-                        className="btn-primary h-12 px-6 flex items-center gap-3 text-[10px]"
+                        className="flex-1 md:flex-none btn-primary h-12 px-4 md:px-6 flex items-center justify-center gap-3 text-[10px]"
                     >
                         <UserPlus size={16} /> REGISTER PERSONNEL
                     </button>
