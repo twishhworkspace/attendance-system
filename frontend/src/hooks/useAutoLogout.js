@@ -2,43 +2,54 @@ import { useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
-export const useAutoLogout = (timeoutMs = 600000) => {
+export const useAutoLogout = (timeoutMs = 60000) => {
     const { user, logout } = useAuth();
     const { showToast } = useToast();
-    const timerRef = useRef(null);
+    const lastActivityRef = useRef(Date.now());
+    const intervalRef = useRef(null);
 
     useEffect(() => {
         // Only apply to employees
         if (!user || user.role !== 'EMPLOYEE') return;
 
-        const handleTimeout = () => {
-            logout();
-            showToast("Session expired due to inactivity. Please log in again.", "info");
-        };
+        // Ensure we start fresh when mounted
+        lastActivityRef.current = Date.now();
 
-        const resetTimer = () => {
-            if (timerRef.current) clearTimeout(timerRef.current);
-            timerRef.current = setTimeout(handleTimeout, timeoutMs);
+        const checkInactivity = () => {
+            if (Date.now() - lastActivityRef.current >= timeoutMs) {
+                logout();
+                showToast("Session expired due to inactivity. Please log in again.", "info");
+            }
         };
 
         const handleActivity = () => {
-            resetTimer();
+            lastActivityRef.current = Date.now();
         };
 
-        // Initialize timer
-        resetTimer();
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                checkInactivity();
+            }
+        };
 
-        // Listen for user interactions
-        const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+        // Check every 5 seconds (Handles active app inactivity)
+        intervalRef.current = setInterval(checkInactivity, 5000);
+
+        // Listen for user interactions to reset the activity clock
+        const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart', 'touchmove'];
         events.forEach(event => {
-            window.addEventListener(event, handleActivity);
+            window.addEventListener(event, handleActivity, { passive: true });
         });
+        
+        // Listen for when the app comes out of the background
+        document.addEventListener('visibilitychange', handleVisibilityChange);
 
         return () => {
-            if (timerRef.current) clearTimeout(timerRef.current);
+            if (intervalRef.current) clearInterval(intervalRef.current);
             events.forEach(event => {
                 window.removeEventListener(event, handleActivity);
             });
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
     }, [user, logout, showToast, timeoutMs]);
 };

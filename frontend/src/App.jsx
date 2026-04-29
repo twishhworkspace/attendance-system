@@ -53,7 +53,7 @@ const AppContent = () => {
     const [biometricEmail, setBiometricEmail] = useState(localStorage.getItem('twishh_last_email') || '');
 
     useOfflineSync(); 
-    useAutoLogout(600000); // 10 minutes inactivity timeout
+    useAutoLogout(60000); // 1 minute inactivity timeout
 
     useEffect(() => {
         if (!user) {
