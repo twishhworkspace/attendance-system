@@ -265,7 +265,11 @@ const downloadAttendanceReport = async (req, res) => {
       if (log.checkIn && log.checkOut) {
         variance = Math.round((new Date(log.checkOut) - new Date(log.checkIn)) / 60000);
       }
-      csv += `${escapeCsv(log.user.name)},${escapeCsv(log.user.email)},${escapeCsv(log.checkIn)},${escapeCsv(log.checkOut || '--')},${escapeCsv(log.status)},${variance},${escapeCsv(log.notes || '')}\n`;
+      let finalNotes = log.notes || '';
+      if (log.isAutoCheckout) {
+        finalNotes = finalNotes ? `${finalNotes} (Auto Checked Out)` : 'Auto Checked Out';
+      }
+      csv += `${escapeCsv(log.user.name)},${escapeCsv(log.user.email)},${escapeCsv(log.checkIn)},${escapeCsv(log.checkOut || '--')},${escapeCsv(log.status)},${variance},${escapeCsv(finalNotes)}\n`;
     });
 
     res.setHeader('Content-Type', 'text/csv');

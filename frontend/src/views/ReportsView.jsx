@@ -191,7 +191,7 @@ const ReportsView = ({ selectedUser, setSelectedUser, range, setRange, customDat
                                         Variance: variance,
                                         Status: l.status,
                                         Location: resolveLoc(l, offices),
-                                        Notes: l.notes || ''
+                                        Notes: l.isAutoCheckout ? (l.notes ? `${l.notes} (Auto Checked Out)` : 'Auto Checked Out') : (l.notes || '')
                                     }
                                 }));
                                 const wb = XLSX.utils.book_new();
@@ -285,7 +285,12 @@ const ReportsView = ({ selectedUser, setSelectedUser, range, setRange, customDat
                                                 <>
                                                     <td className="font-bold italic text-white uppercase text-[10px] tracking-widest">{new Date(l.checkIn).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</td>
                                                     <td><span className="text-white font-bold">{new Date(l.checkIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></td>
-                                                    <td><span className="text-white font-bold">{l.checkOut ? new Date(l.checkOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--'}</span></td>
+                                                    <td>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-white font-bold">{l.checkOut ? new Date(l.checkOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--'}</span>
+                                                            {l.isAutoCheckout && <span className="text-[8px] text-amber-500 font-black uppercase mt-1">Auto Checked Out</span>}
+                                                        </div>
+                                                    </td>
                                                     <td className="text-violet-500 font-black italic text-[10px]">{duration}</td>
                                                     <td className={`font-black text-[10px] ${parseFloat(varianceValue) >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                                         {variance}
@@ -296,7 +301,12 @@ const ReportsView = ({ selectedUser, setSelectedUser, range, setRange, customDat
                                                     <td><div className="flex flex-col"><span className="font-bold italic uppercase text-white text-xs">{l.user?.name}</span><span className="text-[9px] text-slate-700">{l.user?.email}</span></div></td>
                                                     <td><div className="flex flex-col"><span className="text-white text-[10px] font-mono">{new Date(l.checkIn).toLocaleTimeString()}</span><span className="text-[8px] text-slate-700 uppercase">{new Date(l.checkIn).toLocaleDateString()}</span></div></td>
                                                     <td><span className="text-[10px] font-mono text-slate-500">{resolveLoc(l, offices)}</span></td>
-                                                    <td><p className="text-[11px] text-slate-500 italic truncate max-w-[150px]">{l.notes || '--'}</p></td>
+                                                    <td>
+                                                        <div className="flex flex-col">
+                                                            <p className="text-[11px] text-slate-500 italic truncate max-w-[150px]">{l.notes || '--'}</p>
+                                                            {l.isAutoCheckout && <span className="text-[8px] text-amber-500 font-black uppercase mt-1 tracking-widest">Auto Checked Out</span>}
+                                                        </div>
+                                                    </td>
                                                 </>
                                             )}
                                             <td className="text-right pr-8"><span className={`status-pill ${l.status==='PRESENT'?'text-emerald-500 bg-emerald-500/10 border-emerald-500/20':l.status==='LATE'?'text-amber-500 bg-amber-500/10 border-amber-500/20':'text-rose-500 bg-rose-500/10 border-rose-500/20'}`}>{l.status || 'ABSENT'}</span></td>
