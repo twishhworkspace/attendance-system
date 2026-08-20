@@ -1,0 +1,46 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": "18.x"
+  },
+  "prisma": {
+    "schema": "../database/schema.prisma",
+    "seed": "node prisma/seed.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "build": "npx prisma generate --schema=../database/schema.prisma && npx prisma migrate deploy --schema=../database/schema.prisma",
+    "prisma:generate": "npx prisma generate --schema=../database/schema.prisma",
+    "prisma:deploy": "npx prisma migrate deploy --schema=../database/schema.prisma",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "@simplewebauthn/server": "^13.1.2",
+    "axios": "^1.7.9",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.0",
+    "express": "^5.2.1",
+    "express-rate-limit": "^7.5.0",
+    "googleapis": "^173.0.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.7",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^8.0.6",
+    "prisma": "^5.22.0",
+    "xlsx": "^0.18.5",
+    "xss": "^1.0.15",
+    "zod": "^4.3.6"
+  }
+}
